@@ -1,0 +1,1295 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Demande de devis · Télé-Marmotte</title>
+<meta name="description" content="Concert, teaser, clip, documentaire : décrivez votre projet en quelques questions et obtenez tout de suite une estimation du prix.">
+<meta property="og:title" content="Demande de devis vidéo · Télé-Marmotte">
+<meta property="og:description" content="Captation, montage, mixage : quelques questions et une estimation du prix tout de suite.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://image.jimcdn.com/app/cms/image/transf/dimension=240x10000:format=jpg/path/s2a878a15d7bf552c/image/i2e80acb7fc793f25/version/1521546626/image.jpg">
+<meta name="theme-color" content="#9cc7a1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Roboto+Slab:wght@500;600;700&display=swap">
+<style>
+/* Aux couleurs du site tele-marmotte.com : blanc, bandeau vert sauge, texte vert très sombre, Roboto Slab. */
+:root {
+  --bg: #f5f8f3;
+  --surface: #ffffff;
+  --ink: #112611;
+  --muted: #5b6a5a;
+  --line: #dce6d9;
+  --line-strong: #b7c8b3;
+  --sage: #9cc7a1;
+  --sage-ink: #0f2a14;
+  --accent: #2e6b3b;
+  --accent-ink: #ffffff;
+  --accent-soft: #e5f1e5;
+  --est-bg: #1d4527;
+  --est-ink: #f2f8f0;
+  --warn: #9a3b1f;
+  --shadow: 0 1px 2px rgba(17, 38, 17, .05), 0 3px 12px rgba(17, 38, 17, .05);
+  --f-head: 'Roboto Slab', Georgia, serif;
+  --f-body: 'Open Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1911;
+    --surface: #172419;
+    --ink: #e7f0e5;
+    --muted: #a2b39f;
+    --line: #273a2a;
+    --line-strong: #3b523f;
+    --sage: #2b4330;
+    --sage-ink: #e7f0e5;
+    --accent: #8cc797;
+    --accent-ink: #0c1a0f;
+    --accent-soft: #1d3322;
+    --est-bg: #1d3322;
+    --est-ink: #eef6ec;
+    --warn: #f0a07f;
+    --shadow: none;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 17px/1.5 var(--f-body);
+  -webkit-tap-highlight-color: transparent;
+}
+button, input, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2.5px solid var(--accent); outline-offset: 2px; }
+
+#app { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
+
+/* ---------- Bandeau ---------- */
+header {
+  position: sticky; top: 0; z-index: 5;
+  background: var(--sage);
+  color: var(--sage-ink);
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.topbar {
+  max-width: 600px; margin: 0 auto;
+  display: grid; grid-template-columns: 44px 1fr 44px; align-items: center;
+  height: 52px; padding: 0 8px;
+}
+.back {
+  width: 44px; height: 44px; border: 0; border-radius: 50%;
+  background: transparent; display: grid; place-items: center;
+}
+.back[hidden] { display: grid !important; visibility: hidden; }
+.back:active { background: rgba(0, 0, 0, .08); }
+.back svg { width: 24px; height: 24px; }
+.brand {
+  justify-self: center;
+  font-family: var(--f-head); font-weight: 600; font-size: 17px; letter-spacing: .01em;
+  color: inherit; text-decoration: none;
+}
+.count { justify-self: end; padding-right: 8px; font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; opacity: .8; }
+.progress { height: 4px; background: rgba(17, 38, 17, .12); }
+.progress i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .35s ease; }
+
+/* ---------- Contenu ---------- */
+main { flex: 1; width: 100%; max-width: 600px; margin: 0 auto; padding: 26px 16px 20px; }
+main:focus { outline: none; }
+.step { animation: in .28s cubic-bezier(.2, .7, .2, 1) both; }
+.step.rev { animation-name: inrev; }
+.step.still { animation: none; }
+@keyframes in { from { opacity: 0; transform: translateX(18px); } }
+@keyframes inrev { from { opacity: 0; transform: translateX(-18px); } }
+@media (prefers-reduced-motion: reduce) { .step { animation: none; } .progress i { transition: none; } }
+
+.eyebrow { margin: 0 0 6px; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1.q {
+  font-family: var(--f-head); font-weight: 600;
+  font-size: clamp(25px, 6.8vw, 32px); line-height: 1.18;
+  margin: 0 0 8px; text-wrap: balance;
+}
+h1.q:focus { outline: none; }
+.hint { margin: 0 0 20px; color: var(--muted); }
+.lead { font-size: 18px; margin: 0 0 18px; }
+.small { font-size: 14px; color: var(--muted); }
+
+/* Choix */
+.opts { display: grid; gap: 10px; margin-top: 18px; }
+.hint + .opts { margin-top: 0; }
+.opt {
+  display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 14px;
+  width: 100%; min-height: 60px; padding: 13px 16px;
+  text-align: left; border: 1.5px solid var(--line); border-radius: 14px;
+  background: var(--surface); box-shadow: var(--shadow);
+  transition: border-color .15s, background-color .15s, transform .1s;
+}
+.opt.has-ico { grid-template-columns: auto 1fr auto; }
+.opt:active { transform: scale(.985); }
+.opt .ico {
+  width: 42px; height: 42px; border-radius: 11px;
+  display: grid; place-items: center;
+  background: var(--accent-soft); color: var(--accent);
+}
+.opt .ico svg { width: 24px; height: 24px; }
+.opt .t { display: block; font-weight: 650; line-height: 1.3; }
+.opt .s { display: block; margin-top: 2px; font-size: 15px; line-height: 1.35; color: var(--muted); }
+.opt .pr { display: block; margin-top: 4px; font-weight: 700; color: var(--accent); }
+.opt .tag {
+  display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; vertical-align: 2px;
+  font-size: 12px; font-weight: 700; background: var(--accent); color: var(--accent-ink);
+}
+.opt .mk {
+  width: 24px; height: 24px; border-radius: 50%;
+  border: 1.5px solid var(--line-strong); display: grid; place-items: center; flex: none;
+}
+.opt.check .mk { border-radius: 7px; }
+.opt .mk svg { width: 16px; height: 16px; opacity: 0; color: var(--accent-ink); }
+.opt[aria-checked="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.opt[aria-checked="true"] .mk { background: var(--accent); border-color: var(--accent); }
+.opt[aria-checked="true"] .mk svg { opacity: 1; }
+.opt:not(.check)[aria-checked="true"] .mk::after { content: ''; width: 9px; height: 9px; border-radius: 50%; background: var(--accent-ink); }
+.opt:not(.check) .mk svg { display: none; }
+
+/* Champs */
+.field { display: grid; gap: 6px; margin: 0 0 16px; }
+.field > label, .lbl-row { font-weight: 600; font-size: 15px; }
+.opt-l { font-weight: 400; color: var(--muted); }
+input[type=text], input[type=email], input[type=tel], input[type=date], input[type=time], textarea {
+  width: 100%; min-width: 0; min-height: 52px; padding: 12px 14px;
+  font-size: 17px; border: 1.5px solid var(--line-strong); border-radius: 12px;
+  background: var(--surface); color: var(--ink);
+  -webkit-appearance: none; appearance: none;
+}
+input[type=date], input[type=time] { display: block; text-align: left; }
+input::-webkit-date-and-time-value { text-align: left; }
+textarea { min-height: 120px; resize: vertical; line-height: 1.45; }
+input:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+::placeholder { color: var(--muted); opacity: .75; }
+.after { margin-top: 18px; }
+.after:empty { display: none; }
+
+.dates { display: grid; gap: 8px; }
+.daterow { display: grid; grid-template-columns: minmax(0, 1fr) 112px 40px; gap: 8px; align-items: center; }
+.daterow.nohour { grid-template-columns: minmax(0, 1fr) 40px; }
+.daterow-head { display: grid; grid-template-columns: minmax(0, 1fr) 112px 40px; gap: 8px; font-size: 14px; color: var(--muted); }
+.daterow-head.nohour { grid-template-columns: minmax(0, 1fr) 40px; }
+.rm { width: 40px; height: 40px; border: 0; border-radius: 50%; background: transparent; color: var(--muted); display: grid; place-items: center; }
+.rm svg { width: 20px; height: 20px; }
+.rm[hidden] { display: block !important; visibility: hidden; }
+.addrow {
+  width: 100%; min-height: 48px; margin-top: 4px;
+  border: 1.5px dashed var(--line-strong); border-radius: 12px; background: transparent;
+  color: var(--accent); font-weight: 650;
+}
+.toggle { display: flex; align-items: center; gap: 12px; margin: 16px 0 6px; font-weight: 600; cursor: pointer; }
+.toggle input { width: 22px; height: 22px; accent-color: var(--accent); margin: 0; flex: none; }
+.flou { margin-top: 10px; padding: 14px; border-radius: 14px; background: var(--surface); border: 1.5px solid var(--line); }
+.sep { height: 1px; background: var(--line); margin: 22px 0 18px; border: 0; }
+
+.stepper { display: inline-flex; align-items: center; border: 1.5px solid var(--line-strong); border-radius: 14px; background: var(--surface); overflow: hidden; }
+.stepper button { width: 60px; height: 56px; border: 0; background: transparent; font-size: 26px; line-height: 1; color: var(--accent); }
+.stepper button:active { background: var(--accent-soft); }
+.stepper output { min-width: 56px; text-align: center; font-family: var(--f-head); font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* Estimation */
+.est { background: var(--est-bg); color: var(--est-ink); border-radius: 20px; padding: 20px 20px 10px; }
+.est .lbl { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; opacity: .85; }
+.est .lbl i { width: 8px; height: 8px; border-radius: 50%; background: #ff5b48; box-shadow: 0 0 6px #ff5b48; }
+.est .big { font-family: var(--f-head); font-weight: 700; font-size: clamp(38px, 11vw, 54px); line-height: 1.05; margin: 10px 0 6px; font-variant-numeric: tabular-nums; }
+.est .big.range { font-size: clamp(30px, 8.6vw, 44px); }
+.est .rng { opacity: .8; font-size: 15px; }
+.est ul { list-style: none; margin: 16px 0 0; padding: 0; border-top: 1px solid rgba(255, 255, 255, .18); }
+.est li { display: flex; justify-content: space-between; gap: 14px; padding: 10px 0; font-size: 15px; border-bottom: 1px solid rgba(255, 255, 255, .1); }
+.est li:last-child { border-bottom: 0; }
+.est li b { white-space: nowrap; font-weight: 650; font-variant-numeric: tabular-nums; }
+.notes { margin: 14px 0 0; padding: 0 0 0 18px; color: var(--muted); font-size: 14px; }
+.notes li { margin: 3px 0; }
+.tip { margin: 16px 0 0; padding: 12px 14px; border-radius: 12px; background: var(--accent-soft); font-size: 15px; }
+.tip b { color: var(--accent); }
+
+.recap { margin-top: 26px; }
+.recap h2 { font-family: var(--f-head); font-weight: 600; font-size: 20px; margin: 0 0 6px; }
+.recap dl { margin: 0; border-top: 1px solid var(--line); }
+.recap .row { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.recap dt { grid-column: 1; font-size: 13px; color: var(--muted); }
+.recap dd { grid-column: 1; margin: 1px 0 0; overflow-wrap: anywhere; white-space: pre-line; }
+.recap .edit { grid-column: 2; grid-row: 1 / span 2; align-self: center; border: 0; background: transparent; color: var(--accent); font-weight: 650; font-size: 15px; padding: 10px 4px; }
+
+/* Accueil, fin */
+.logo { display: block; width: 116px; height: 116px; margin: 4px auto 18px; border-radius: 50%; background: #fff; object-fit: cover; box-shadow: 0 0 0 4px var(--surface), var(--shadow); }
+.welcome h1.q { text-align: center; }
+.welcome .lead { text-align: center; }
+.meta { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin: 0 0 22px; padding: 0; list-style: none; }
+.meta li { padding: 5px 12px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-size: 14px; font-weight: 650; }
+.resume { padding: 14px 16px; border-radius: 14px; background: var(--surface); border: 1.5px solid var(--line); margin-bottom: 18px; }
+.resume p { margin: 0 0 6px; }
+.linkbtn { border: 0; background: none; padding: 6px 0; color: var(--accent); font-weight: 650; text-decoration: underline; text-underline-offset: 3px; }
+details.tarifs { background: var(--surface); border: 1.5px solid var(--line); border-radius: 14px; padding: 0 16px; }
+details.tarifs summary { padding: 14px 0; font-weight: 650; cursor: pointer; color: var(--accent); list-style: none; display: flex; justify-content: space-between; align-items: center; }
+details.tarifs summary::-webkit-details-marker { display: none; }
+details.tarifs summary::after { content: '+'; font-size: 22px; line-height: 1; }
+details.tarifs[open] summary::after { content: '\2212'; }
+.tarifs ul { list-style: none; margin: 0; padding: 0; }
+.tarifs li { display: flex; justify-content: space-between; gap: 14px; padding: 11px 0; border-top: 1px solid var(--line); }
+.tarifs li small { display: block; color: var(--muted); font-size: 14px; line-height: 1.35; }
+.tarifs li b { white-space: nowrap; color: var(--accent); }
+.tarifs p { margin: 4px 0 14px; }
+
+.done-ico { width: 84px; height: 84px; margin: 10px 0 18px; border-radius: 22px; display: grid; place-items: center; background: var(--accent); color: var(--accent-ink); }
+.done-ico svg { width: 46px; height: 46px; }
+.actions { display: grid; gap: 10px; margin: 22px 0 14px; }
+
+/* Barre du bas */
+.bar {
+  position: sticky; bottom: 0; z-index: 4;
+  padding: 10px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(to bottom, transparent, var(--bg) 22px);
+}
+.bar .inner { max-width: 568px; margin: 0 auto; }
+.err { min-height: 0; margin: 0 0 8px; color: var(--warn); font-weight: 600; font-size: 15px; }
+.err:empty { display: none; }
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; min-height: 54px; padding: 12px 18px;
+  border: 0; border-radius: 14px;
+  background: var(--accent); color: var(--accent-ink);
+  font-weight: 700; font-size: 17px; text-decoration: none; text-align: center;
+  box-shadow: 0 6px 18px rgba(46, 107, 59, .25);
+}
+.btn:active { transform: scale(.99); }
+.btn[disabled] { opacity: .6; cursor: progress; }
+.btn.ghost { background: transparent; color: var(--accent); box-shadow: none; border: 1.5px solid var(--line-strong); }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+noscript p { max-width: 560px; margin: 40px auto; padding: 0 16px; }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="topbar">
+      <button id="back" class="back" type="button" aria-label="Question précédente" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <a class="brand" id="brand" href="https://www.tele-marmotte.com/">Télé-Marmotte</a>
+      <span id="count" class="count" aria-live="polite"></span>
+    </div>
+    <div class="progress" aria-hidden="true"><i id="bar"></i></div>
+  </header>
+  <main id="main" tabindex="-1"></main>
+  <div class="bar" id="foot">
+    <div class="inner">
+      <p class="err" id="err" role="alert"></p>
+      <button class="btn" id="next" type="button">Continuer</button>
+    </div>
+  </div>
+</div>
+<noscript><p>Ce questionnaire a besoin de JavaScript. Vous pouvez aussi m’écrire directement : simonhanot@hotmail.fr</p></noscript>
+<script>
+(() => {
+'use strict';
+
+/* =====================================================================
+   Réglages
+   ===================================================================== */
+const CONFIG = {
+  email: ['simonhanot', 'hotmail.fr'].join('@'),
+  // Après le premier envoi, FormSubmit envoie un mail d'activation, puis propose un alias
+  // (une suite de lettres) : le mettre ici pour ne plus exposer l'adresse dans la page.
+  formsubmitAlias: '',
+  site: 'https://www.tele-marmotte.com/',
+  logo: 'https://image.jimcdn.com/app/cms/image/transf/dimension=240x10000:format=jpg/path/s2a878a15d7bf552c/image/i2e80acb7fc793f25/version/1521546626/image.jpg',
+  noteDeplacement: 'Hors frais de déplacement depuis Strasbourg (67200), précisés dans le devis selon le lieu.',
+};
+const ENDPOINT = 'https://formsubmit.co/ajax/' + (CONFIG.formsubmitAlias || CONFIG.email);
+
+/* Tarifs TTC. Calibrage : 5 à 7 caméras + spectacle entier (1 h à 1 h 30) + teaser + mixage = 800 €. */
+const T = {
+  captation: {2: 200, 4: 280, 6: 350, 8: 450},  // une date : installation, caméras, rushes
+  reprise: 0.6,                                   // chaque représentation en plus du même spectacle
+  montage: {2: 150, 4: 200, 6: 250, 8: 300},      // spectacle entier d'1 h à 1 h 30
+  duree: {30: 0.5, 60: 0.75, 90: 1, 120: 1.25, 180: 1.5},
+  montageReprise: 0.2,                            // plus de rushes à comparer par représentation en plus
+  mixageReprise: 0.3,
+  teaser: 100, teaserSeul: 150, versionCourte: 30,
+  mixage: 100, recalage: 40, sonCamera: 0.6,
+  prep: 80,                                       // fichiers fournis par le client (synchro, tri)
+  verticale: 50, morceauxSepares: 50, titres: 50,
+  morceaux: {captation: 0.8, montage: {2: 40, 4: 60, 6: 80, 8: 100}, mixage: 40, recalage: 15, titres: 30, degressif: 0.7},
+  clip: {
+    jour: {performance: 350, histoire: 450, melange: 400, nsp: 400},
+    montage: {performance: 250, histoire: 400, melange: 350, nsp: 350},
+    jourSup: 0.15, mixage: 80, makingof: 150,
+  },
+  docu: {
+    jour: 300, montageJour: 200,
+    jours: {5: [2, 3], 15: [4, 6], 30: [7, 10], 60: [12, 18], 90: [20, 30]},
+    mixage: {5: 80, 15: 150, 30: 250, 60: 400, 90: 600},
+    bandeAnnonce: 150, sousTitres: 100, verticale: 50,
+  },
+  urgence: 0.2,             // sur la post-production
+  degressifConcerts: 0.1,   // à partir de 3 concerts différents
+  marge: 0.07, margeClip: 0.2, margeDocu: 0.1,
+};
+
+/* =====================================================================
+   Textes des choix
+   ===================================================================== */
+const TYPES = {
+  spectacle: {t: 'Un concert ou un spectacle entier', s: 'Filmé du début à la fin', ico: 'stage', court: 'Spectacle entier'},
+  teaser:    {t: 'Un teaser', s: 'Une bande-annonce d’une minute environ', ico: 'bolt', court: 'Teaser'},
+  morceaux:  {t: 'Un ou quelques morceaux', s: 'Live session, vidéos pour YouTube ou les réseaux', ico: 'note', court: 'Morceaux'},
+  clip:      {t: 'Un clip', s: 'Tourné spécialement pour une chanson', ico: 'clap', court: 'Clip'},
+  docu:      {t: 'Un documentaire, un projet spécial', s: 'Résidence, making-of, film plus long', ico: 'cam', court: 'Documentaire / projet spécial'},
+  autre:     {t: 'Autre chose', s: 'Racontez-moi votre idée', ico: 'spark', court: 'Autre'},
+};
+const FORMULES = {
+  complete:    {t: 'Complète', tag: 'Recommandée', s: '5 à 7 caméras, spectacle entier, teaser, son mixé'},
+  essentielle: {t: 'Essentielle', s: '3 à 4 caméras, spectacle entier, son mixé'},
+  mesure:      {t: 'Sur mesure', s: 'Je choisis les caméras et les options, ou seulement le montage ou le mixage'},
+};
+const CLIP = {
+  performance: {t: 'Le groupe joue', s: 'Une performance filmée, dans un lieu choisi'},
+  histoire:    {t: 'Une histoire', s: 'Des personnages, une mise en scène, plusieurs décors'},
+  melange:     {t: 'Un peu des deux'},
+  nsp:         {t: 'Je ne sais pas encore', s: 'On en parle ensemble'},
+};
+const MEME = {
+  meme:       {t: 'Le même spectacle, joué plusieurs fois', s: 'Je filme chaque représentation et je garde le meilleur de chacune dans une seule vidéo'},
+  differents: {t: 'Des concerts différents', s: 'Une vidéo par date'},
+};
+const FORMATIONS = {
+  solo:      {t: 'Solo ou duo', pour: 'Pour un solo ou un duo'},
+  groupe:    {t: 'Un petit groupe', s: '3 à 6 personnes', pour: 'Pour un petit groupe'},
+  ensemble:  {t: 'Un ensemble', s: '7 à 20 personnes', pour: 'Pour un ensemble'},
+  orchestre: {t: 'Un orchestre, un chœur, une harmonie', s: 'Plus de 20 personnes', pour: 'Pour un orchestre'},
+  scene:     {t: 'Théâtre, danse, conte', s: 'Un spectacle de scène', pour: 'Pour un spectacle de scène'},
+};
+const CAMS = {
+  2: {t: '2 caméras', s: 'Un plan large et un plan rapproché'},
+  4: {t: '3 à 4 caméras', s: 'Le bon équilibre pour un petit effectif'},
+  6: {t: '5 à 7 caméras', s: 'Chaque musicien a son plan'},
+  8: {t: '8 caméras ou plus', s: 'Orchestre, grande scène'},
+};
+const CAMS_FOURNIES = {2: {t: '1 ou 2'}, 4: {t: '3 ou 4'}, 6: {t: '5 à 7'}, 8: {t: '8 ou plus'}};
+const CONSEIL = {
+  spectacle: {solo: 4, groupe: 6, ensemble: 6, orchestre: 8, scene: 6, _: 6},
+  teaser:    {solo: 2, groupe: 4, ensemble: 4, orchestre: 6, scene: 4, _: 4},
+  morceaux:  {solo: 4, groupe: 4, ensemble: 6, orchestre: 6, scene: 4, _: 4},
+};
+const DUREES = {30: {t: 'Moins de 30 minutes'}, 60: {t: '30 minutes à 1 heure'}, 90: {t: '1 heure à 1 h 30'}, 120: {t: '1 h 30 à 2 heures'}, 180: {t: 'Plus de 2 heures'}};
+const DUREES_FILM = {
+  5: {t: 'Moins de 5 minutes', s: 'Portrait, présentation'},
+  15: {t: '5 à 15 minutes', s: 'Court format, making-of'},
+  30: {t: '15 à 30 minutes'},
+  60: {t: '30 minutes à 1 heure', s: 'Documentaire'},
+  90: {t: 'Plus d’une heure', s: 'Long format'},
+};
+const RESEAUX = 'Pour Instagram, TikTok, les stories';
+const LIVRABLES = {
+  spectacle: {
+    entier:   {t: 'Le spectacle en entier'},
+    teaser:   {t: 'Un teaser d’une minute', s: 'Pour donner envie, sur les réseaux ou votre site'},
+    morceaux: {t: 'Chaque morceau en vidéo séparée', s: 'Pour YouTube ou votre site'},
+    vertical: {t: 'Une version verticale', s: RESEAUX},
+    titres:   {t: 'Titres et générique', s: 'Noms des morceaux, des musiciens, votre logo'},
+  },
+  teaser: {
+    court:    {t: 'Une version de 15 à 30 secondes'},
+    vertical: {t: 'Une version verticale', s: RESEAUX},
+  },
+  morceaux: {
+    titres:   {t: 'Titres à l’écran', s: 'Nom du morceau, des musiciens'},
+    vertical: {t: 'Des versions verticales', s: RESEAUX},
+  },
+  clip: {
+    vertical: {t: 'Une version verticale', s: RESEAUX},
+    makingof: {t: 'Un making-of', s: 'Les coulisses du tournage'},
+  },
+  docu: {
+    bandeAnnonce: {t: 'Une bande-annonce'},
+    sousTitres:   {t: 'Des sous-titres', s: 'Pour une langue étrangère ou les personnes sourdes'},
+    vertical:     {t: 'Des extraits verticaux', s: 'Pour les réseaux'},
+  },
+};
+const SONS_TOURNAGE = {
+  moi:    {t: 'Rien de prévu, vous vous en occupez', s: 'J’apporte mes micros et mes enregistreurs, puis je mixe'},
+  pistes: {t: 'Un ingé son enregistre les pistes', s: 'Je récupère ses pistes séparées et je mixe'},
+  mix:    {t: 'L’ingé son fournit déjà un mix', s: 'Je le cale simplement sur l’image'},
+  nsp:    {t: 'Je ne sais pas encore'},
+};
+const SONS_FOURNIS = {
+  pistes: {t: 'J’ai les pistes séparées', s: 'Console ou enregistreurs multipistes'},
+  mix:    {t: 'J’ai déjà un mix', s: 'Il faut juste le caler sur l’image'},
+  camera: {t: 'Seulement le son des caméras', s: 'Je fais au mieux avec ce qu’il y a'},
+  nsp:    {t: 'Je ne sais pas'},
+};
+const BUDGETS = {
+  b500: {t: 'Moins de 500 €'}, b1000: {t: '500 à 1 000 €'}, b2000: {t: '1 000 à 2 000 €'},
+  b5000: {t: '2 000 à 5 000 €'}, bplus: {t: 'Plus de 5 000 €'}, nsp: {t: 'Je préfère en parler'},
+};
+const DELAIS = {
+  souple: {t: 'Pas d’urgence'},
+  date:   {t: 'Pour une date précise', s: 'Une sortie, un festival, une candidature'},
+  urgent: {t: 'C’est urgent'},
+};
+
+const ICONS = {
+  stage: '<path d="M3 4h18M3 20h18"/><path d="M4 4v16h3c0-4-1-7 3-9-2-2-3-4-3-7"/><path d="M20 4v16h-3c0-4 1-7-3-9 2-2 3-4 3-7"/>',
+  bolt: '<path d="M13 2 4.5 13H11l-1 9 8.5-11H12l1-9z"/>',
+  note: '<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>',
+  clap: '<rect x="3" y="10" width="18" height="11" rx="1.5"/><path d="m3.2 10-.7-4 16.8-3 .7 4"/><path d="m7.6 5.3 2.5 3.8M12.7 4.4l2.5 3.8"/>',
+  cam: '<rect x="2.5" y="6.5" width="13" height="11" rx="2"/><path d="m15.5 10.5 6-3.5v10l-6-3.5z"/>',
+  spark: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/>',
+};
+const svg = (paths, w = 1.8) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
+const SVG_CHECK = svg('<path d="m5 12.5 4.5 4.5L19 7.5"/>', 3);
+const SVG_X = svg('<path d="M6 6l12 12M18 6 6 18"/>', 2);
+
+/* =====================================================================
+   Outils
+   ===================================================================== */
+const $ = s => document.querySelector(s);
+function h(tag, props, ...kids) {
+  const el = document.createElement(tag);
+  if (props) for (const [k, v] of Object.entries(props)) {
+    if (v == null || v === false) continue;
+    if (k === 'class') el.className = v;
+    else if (k === 'html') el.innerHTML = v;
+    else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? '' : v);
+  }
+  for (const c of kids.flat()) if (c != null && c !== false && c !== '') el.append(c.nodeType ? c : String(c));
+  return el;
+}
+const fmtN = n => new Intl.NumberFormat('fr-FR').format(n);
+const fmt = n => fmtN(n) + ' €';
+const r10 = x => Math.round(x / 10) * 10;
+const r50 = x => Math.round(x / 50) * 50;
+const iso = d => new Date(d.getTime() - d.getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
+const TODAY = iso(new Date());
+const jour = d => new Date(d + 'T12:00:00');
+const fmtDate = d => jour(d).toLocaleDateString('fr-FR', {weekday: 'short', day: 'numeric', month: 'short', year: 'numeric'});
+const fmtHeure = t => { const [hh, mm] = t.split(':'); return `${+hh} h${mm && mm !== '00' ? ' ' + mm : ''}`; };
+const toOpts = (obj, extra) => Object.entries(obj).map(([v, o]) => ({v, ...o, ...(extra ? extra(v, o) : {})}));
+const pluriel = (n, un, plus) => `${n} ${n > 1 ? plus : un}`;
+
+/* =====================================================================
+   État
+   ===================================================================== */
+const blank = () => ({
+  type: null, nom: '', formule: null, clipStyle: null, desc: '',
+  services: {tournage: true, montage: true, mixage: true},
+  dates: [{d: '', h: ''}], flou: false, nbApprox: 1, periode: '', lieu: '',
+  memeSpectacle: null, formation: null, instruments: '',
+  cameras: null, camerasFournies: null, duree: null, nbMorceaux: 1, dureeFinale: null,
+  livrables: {}, son: null, budget: null, delai: null, delaiDate: '',
+  contact: {nom: '', email: '', tel: ''}, message: '', honey: '', envoye: false,
+});
+let S = blank();
+
+const projet = (s = S) => s.type === 'docu' || s.type === 'autre';
+const post = (s = S) => s.services.montage || s.services.mixage;
+const nbDates = (s = S) => !s.services.tournage ? 1 : s.flou ? s.nbApprox : Math.max(1, s.dates.filter(r => r.d).length);
+const lastDate = (s = S) => {
+  if (!s.services.tournage || s.flou) return null;
+  const d = s.dates.map(r => r.d).filter(Boolean).sort();
+  return d.length ? d[d.length - 1] : null;
+};
+const nomCourt = () => S.nom.trim() || (projet() ? 'votre projet' : 'votre ensemble');
+
+function camsEff(s = S) {
+  if (!s.services.tournage) return +(s.camerasFournies || 4);
+  if (s.type === 'spectacle' && s.formule === 'complete') return 6;
+  if (s.type === 'spectacle' && s.formule === 'essentielle') return 4;
+  if (s.cameras && s.cameras !== 'conseil') return +s.cameras;
+  const c = CONSEIL[s.type] || CONSEIL.spectacle;
+  return c[s.formation] || c._;
+}
+function urgent(s = S) {
+  if (s.delai === 'urgent') return true;
+  if (s.delai === 'date' && s.delaiDate) {
+    const ref = lastDate(s) || TODAY;
+    return (jour(s.delaiDate) - jour(ref)) / 864e5 < 10;
+  }
+  return false;
+}
+function mixBase(s) {
+  if (s.son === 'mix') return T.recalage;
+  if (s.son === 'camera') return T.mixage * T.sonCamera;
+  return T.mixage;
+}
+
+function setType(v) {
+  if (S.type === v) return;
+  const garde = ['nom', 'contact', 'message', 'dates', 'flou', 'nbApprox', 'periode', 'lieu', 'delai', 'delaiDate', 'formation', 'instruments'];
+  const n = blank();
+  for (const k of garde) n[k] = S[k];
+  n.type = v;
+  n.services = {tournage: true, montage: true, mixage: v !== 'clip'};
+  n.livrables = v === 'spectacle' ? {entier: true, teaser: true} : {};
+  S = n;
+}
+function applyFormule(v) {
+  S.formule = v;
+  if (v === 'mesure') return;
+  S.services = {tournage: true, montage: true, mixage: true};
+  S.livrables = {...S.livrables, entier: true, teaser: v === 'complete'};
+}
+
+/* =====================================================================
+   Estimation
+   ===================================================================== */
+function estimer(s = S) {
+  const L = [];
+  const add = (label, min, max = min, post = true) => {
+    min = r10(min); max = r10(max);
+    if (min || max) L.push({label, min, max, post});
+  };
+  const sv = s.services, lv = s.livrables || {}, n = nbDates(s), cams = camsEff(s);
+  const camsTxt = CAMS[cams].t;
+  let mode = 'precis', marge = T.marge;
+
+  if (s.type === 'spectacle') {
+    const differents = n > 1 && s.memeSpectacle === 'differents';
+    const reps = differents ? 1 : n;
+    const mult = differents ? n : 1;
+    const x = mult > 1 ? ` (× ${n} concerts)` : '';
+    const k = T.duree[s.duree] || 1;
+    if (sv.tournage) add(`Tournage · ${camsTxt}${reps > 1 ? `, ${reps} représentations` : ''}${x}`, T.captation[cams] * (1 + T.reprise * (reps - 1)) * mult, undefined, false);
+    else if (post(s)) add('Préparation de vos fichiers', T.prep * mult);
+    const complet = lv.entier || lv.morceaux;
+    if (sv.montage) {
+      if (complet) add(`Montage ${lv.entier ? 'du spectacle entier' : 'des morceaux'}, étalonnage${x}`, T.montage[cams] * k * (1 + T.montageReprise * (reps - 1)) * mult);
+      if (lv.teaser) add(`Teaser d’une minute${x}`, (complet ? T.teaser : T.teaserSeul) * mult);
+      if (lv.entier && lv.morceaux) add(`Morceaux exportés séparément${x}`, T.morceauxSepares * mult);
+      if (lv.vertical) add(`Version verticale${x}`, T.verticale * mult);
+      if (lv.titres) add(`Titres et générique${x}`, T.titres * mult);
+    }
+    if (sv.mixage) {
+      const m = (!sv.montage || complet) ? mixBase(s) * (0.6 + 0.4 * k) * (1 + T.mixageReprise * (reps - 1)) : mixBase(s) * 0.5;
+      add(`${s.son === 'mix' ? 'Calage du mix sur l’image' : 'Mixage audio'}${x}`, m * mult);
+    }
+    if (mult >= 3) {
+      const t = L.reduce((a, l) => a + l.min, 0);
+      add(`Tarif dégressif, ${n} concerts (-10 %)`, -t * T.degressifConcerts, undefined, false);
+    }
+  } else if (s.type === 'teaser') {
+    if (sv.tournage) add(`Tournage · ${camsTxt}${n > 1 ? `, ${n} dates` : ''}`, T.captation[cams] * (1 + T.reprise * (n - 1)), undefined, false);
+    else if (post(s)) add('Préparation de vos fichiers', T.prep);
+    if (sv.montage) {
+      add('Montage du teaser, étalonnage', T.teaserSeul * (1 + T.montageReprise * (n - 1)));
+      if (lv.court) add('Version de 15 à 30 secondes', T.versionCourte);
+      if (lv.vertical) add('Version verticale', T.verticale);
+    }
+    if (sv.mixage) add(s.son === 'mix' ? 'Calage du son' : 'Mixage audio', mixBase(s) * 0.5);
+  } else if (s.type === 'morceaux') {
+    const N = s.nbMorceaux || 1;
+    const deg = unit => { let t = 0; for (let i = 1; i <= N; i++) t += unit * (i <= 3 ? 1 : T.morceaux.degressif); return t; };
+    const quoi = pluriel(N, 'morceau', 'morceaux');
+    if (sv.tournage) add(`Tournage · ${camsTxt}${n > 1 ? `, ${n} sessions` : ''}`, T.captation[cams] * T.morceaux.captation * n, undefined, false);
+    else if (post(s)) add('Préparation de vos fichiers', T.prep);
+    if (sv.montage) {
+      add(`Montage de ${quoi}, étalonnage`, deg(T.morceaux.montage[cams]));
+      if (lv.titres) add('Titres à l’écran', T.morceaux.titres);
+      if (lv.vertical) add('Versions verticales', T.verticale);
+    }
+    if (sv.mixage) {
+      const u = s.son === 'mix' ? T.morceaux.recalage : s.son === 'camera' ? T.morceaux.mixage * T.sonCamera : T.morceaux.mixage;
+      add(`${s.son === 'mix' ? 'Calage du son' : 'Mixage'} de ${quoi}`, deg(u));
+    }
+  } else if (s.type === 'clip') {
+    const st = s.clipStyle || 'nsp';
+    if (sv.tournage) add(`Tournage · ${pluriel(n, 'jour', 'jours')}`, T.clip.jour[st] * n, undefined, false);
+    else if (post(s)) add('Préparation de vos fichiers', T.prep);
+    if (sv.montage) {
+      add('Montage et étalonnage du clip', T.clip.montage[st] * (1 + T.clip.jourSup * (n - 1)));
+      if (lv.vertical) add('Version verticale', T.verticale);
+      if (lv.makingof) add('Making-of', T.clip.makingof);
+    }
+    if (sv.mixage) add('Mixage du titre', T.clip.mixage);
+    mode = 'ordre'; marge = T.margeClip;
+  } else if (s.type === 'docu') {
+    const df = s.dureeFinale || '15';
+    if (sv.tournage) add(`Tournage · ${pluriel(n, 'jour', 'jours')}`, T.docu.jour * n, undefined, false);
+    else if (post(s)) add('Préparation de vos fichiers', T.prep);
+    if (sv.montage) {
+      const [a, b] = T.docu.jours[df];
+      add(`Montage et étalonnage · ${a} à ${b} jours`, a * T.docu.montageJour, b * T.docu.montageJour);
+      if (lv.bandeAnnonce) add('Bande-annonce', T.docu.bandeAnnonce);
+      if (lv.sousTitres) add('Sous-titres', T.docu.sousTitres);
+      if (lv.vertical) add('Extraits verticaux', T.docu.verticale);
+    }
+    if (sv.mixage) add('Montage son et mixage', T.docu.mixage[df]);
+    mode = 'ordre'; marge = T.margeDocu;
+  } else {
+    mode = 'devis';
+  }
+
+  if (mode !== 'devis' && post(s) && urgent(s)) {
+    const pm = L.filter(l => l.post).reduce((a, l) => a + l.min, 0);
+    const pM = L.filter(l => l.post).reduce((a, l) => a + l.max, 0);
+    add('Délai express (+20 % sur la post-production)', pm * T.urgence, pM * T.urgence, false);
+  }
+  const min = L.reduce((a, l) => a + l.min, 0), max = L.reduce((a, l) => a + l.max, 0);
+  if (!L.length && mode !== 'devis') mode = 'devis';
+  return {lignes: L, min, max, mode, marge};
+}
+function fourchette(E) {
+  if (E.mode === 'devis') return {big: 'Sur devis', sub: 'Votre projet sort des cases : je vous fais une proposition sur mesure.', court: 'sur devis'};
+  const lo = Math.max(50, r50(E.min * (1 - E.marge))), hi = Math.max(lo, r50(E.max * (1 + E.marge)));
+  if (E.mode === 'precis') {
+    const c = r10(E.min);
+    if (lo === hi) return {big: '≈ ' + fmt(c), sub: 'TTC', court: `≈ ${fmt(c)} TTC`};
+    return {big: '≈ ' + fmt(c), sub: `entre ${fmtN(lo)} et ${fmt(hi)} TTC`, court: `≈ ${fmt(c)} (entre ${fmtN(lo)} et ${fmt(hi)} TTC)`};
+  }
+  return {big: `${fmtN(lo)} à ${fmt(hi)}`, range: true, sub: 'ordre de grandeur, TTC', court: `${fmtN(lo)} à ${fmt(hi)} TTC (ordre de grandeur)`};
+}
+const prixLigne = l => l.max !== l.min ? `${fmtN(l.min)} à ${fmt(l.max)}` : fmt(l.min);
+
+/* Prix de référence, calculés par le même moteur pour rester cohérents. */
+function refPrix(cas) {
+  const b = blank();
+  const s = {
+    complete:    {...b, type: 'spectacle', formule: 'complete', duree: '90', son: 'moi', livrables: {entier: true, teaser: true}},
+    essentielle: {...b, type: 'spectacle', formule: 'essentielle', duree: '90', son: 'moi', livrables: {entier: true}},
+    teaser:      {...b, type: 'teaser', cameras: '2', son: 'moi'},
+    session:     {...b, type: 'morceaux', cameras: '4', son: 'moi', nbMorceaux: 1},
+    clip:        {...b, type: 'clip', clipStyle: 'performance', services: {tournage: true, montage: true, mixage: false}},
+  }[cas];
+  return r10(estimer(s).min);
+}
+
+function astuce(E) {
+  const sv = S.services, lv = S.livrables;
+  if (S.type === 'teaser' && sv.tournage && sv.montage && nbDates() === 1) {
+    const alt = estimer({...S, type: 'spectacle', formule: 'mesure', cameras: String(camsEff()), duree: '90', livrables: {entier: true, teaser: true, vertical: lv.vertical}});
+    const d = r10(alt.min - E.min);
+    if (d > 0 && d <= 450) return ['Bon à savoir : ', `pour environ ${fmt(d)} de plus, je monte aussi le spectacle en entier (base 1 h 30), en plus du teaser.`];
+  }
+  if (S.type === 'spectacle' && sv.montage && lv.entier && !lv.teaser) return ['Bon à savoir : ', `le teaser d’une minute ne coûte que ${fmt(T.teaser)} de plus quand le spectacle est monté en entier. Pratique pour la communication.`];
+  if (sv.tournage && S.formation === 'orchestre' && ['spectacle', 'teaser', 'morceaux'].includes(S.type) && camsEff() < 8) return ['Conseil : ', 'pour un orchestre, 8 caméras permettent de suivre chaque pupitre au moment où il joue.'];
+  return null;
+}
+
+/* =====================================================================
+   Récapitulatif
+   ===================================================================== */
+function datesTxt() {
+  if (S.flou) {
+    const u = S.type === 'clip' || S.type === 'docu' ? ['jour de tournage', 'jours de tournage'] : S.type === 'spectacle' ? ['représentation', 'représentations'] : ['date', 'dates'];
+    return `Pas encore fixées · ${pluriel(S.nbApprox, u[0], u[1])}${S.periode.trim() ? ', ' + S.periode.trim() : ''}`;
+  }
+  return S.dates.filter(r => r.d).sort((a, b) => a.d.localeCompare(b.d))
+    .map(r => fmtDate(r.d) + (r.h ? ' à ' + fmtHeure(r.h) : '')).join('\n');
+}
+function camerasTxt() {
+  if (!S.services.tournage) return CAMS_FOURNIES[S.camerasFournies]?.t + ' (vos images)';
+  if (S.cameras === 'conseil') return `${CAMS[camsEff()].t} (sur conseil)`;
+  return CAMS[camsEff()].t;
+}
+function delaiTxt() {
+  if (S.delai === 'date' && S.delaiDate) return `Pour le ${fmtDate(S.delaiDate)}${urgent() ? ' (délai court)' : ''}`;
+  return DELAIS[S.delai]?.t;
+}
+function rows() {
+  const r = [];
+  const add = (k, v, id) => { if (v) r.push([k, v, id]); };
+  add('Type de vidéo', TYPES[S.type]?.t, 'type');
+  add(projet() ? 'Projet' : 'Ensemble', S.nom.trim(), 'nom');
+  if (has('formule')) add('Formule', FORMULES[S.formule]?.t, 'formule');
+  if (has('clipStyle')) add('Genre de clip', CLIP[S.clipStyle]?.t, 'clipStyle');
+  if (has('desc')) add('Description', S.desc.trim(), 'desc');
+  const sv = [S.services.tournage && 'tournage', S.services.montage && 'montage', S.services.mixage && 'mixage'].filter(Boolean).join(', ');
+  add('Prestations', sv.charAt(0).toUpperCase() + sv.slice(1), has('services') ? 'services' : 'formule');
+  if (has('quand')) { add('Dates', datesTxt(), 'quand'); add('Lieu', S.lieu.trim(), 'quand'); }
+  if (has('meme')) add('Représentations', MEME[S.memeSpectacle]?.t, 'meme');
+  if (has('formation')) add('Sur scène', [FORMATIONS[S.formation]?.t, S.instruments.trim()].filter(Boolean).join(' · '), 'formation');
+  if (has('cameras')) add('Caméras', camerasTxt(), 'cameras');
+  else if (S.type === 'spectacle' && S.services.tournage) add('Caméras', CAMS[camsEff()].t, 'formule');
+  if (has('duree')) add('Durée', DUREES[S.duree]?.t, 'duree');
+  if (has('nbMorceaux')) add('Morceaux', String(S.nbMorceaux), 'nbMorceaux');
+  if (has('dureeFinale')) add('Durée du film', DUREES_FILM[S.dureeFinale]?.t, 'dureeFinale');
+  if (has('livrables')) {
+    const opts = LIVRABLES[S.type];
+    const l = Object.keys(opts).filter(k => S.livrables[k]).map(k => opts[k].t);
+    if (S.type === 'teaser') l.unshift('Un teaser d’une minute');
+    add('À recevoir', l.join('\n') || 'Pas d’option en plus', 'livrables');
+  }
+  if (has('son')) add('Son', (S.services.tournage ? SONS_TOURNAGE : SONS_FOURNIS)[S.son]?.t, 'son');
+  if (has('budget')) add('Budget', BUDGETS[S.budget]?.t, 'budget');
+  if (has('delai')) add('Délai', delaiTxt(), 'delai');
+  return r;
+}
+const sujet = () => `Demande de devis · ${TYPES[S.type]?.court || 'Vidéo'} · ${S.nom.trim() || S.contact.nom.trim()}`;
+function texte() {
+  const E = estimer(), F = fourchette(E);
+  const L = ['Demande de devis vidéo (Télé-Marmotte)', ''];
+  for (const [k, v] of rows()) L.push(`${k} : ${v.replace(/\n/g, ', ')}`);
+  L.push('', `Estimation : ${F.court}`);
+  for (const l of E.lignes) L.push(`  - ${l.label} : ${prixLigne(l)}`);
+  L.push('', `Nom : ${S.contact.nom.trim()}`, `Email : ${S.contact.email.trim()}`);
+  if (S.contact.tel.trim()) L.push(`Téléphone : ${S.contact.tel.trim()}`);
+  if (S.message.trim()) L.push('', 'Message :', S.message.trim());
+  return L.join('\n');
+}
+function payload() {
+  const E = estimer(), F = fourchette(E);
+  const p = {
+    _subject: sujet(), _template: 'table', _captcha: 'false', _honey: S.honey,
+    'Nom': S.contact.nom.trim(), email: S.contact.email.trim(),
+  };
+  if (S.contact.tel.trim()) p['Téléphone'] = S.contact.tel.trim();
+  for (const [k, v] of rows()) p[k] = v.replace(/\n/g, ', ');
+  p['Estimation'] = F.court;
+  if (E.lignes.length) p['Détail de l’estimation'] = E.lignes.map(l => `${l.label} : ${prixLigne(l)}`).join(' ; ');
+  if (S.message.trim()) p['Message'] = S.message.trim();
+  return p;
+}
+
+/* =====================================================================
+   Les étapes
+   ===================================================================== */
+const SEC_PROJET = 'Votre projet', SEC_DETAILS = 'Les détails';
+const secTournage = () => S.services.tournage ? 'Le tournage' : 'Vos images';
+
+const STEPS = [
+  {id: 'welcome', meta: true, render: renderWelcome, button: () => resumeAt ? 'Reprendre ma demande' : 'Commencer'},
+  {id: 'type', kind: 'single', sec: () => SEC_PROJET,
+    title: () => 'Quel type de vidéo voulez-vous ?',
+    opts: () => toOpts(TYPES), get: () => S.type, set: setType},
+  {id: 'nom', kind: 'text', sec: () => SEC_PROJET,
+    title: () => projet() ? 'Comment s’appelle le projet ?' : 'Comment s’appelle votre ensemble ?',
+    hint: () => projet() ? 'Un titre provisoire suffit.' : 'Ou le nom du groupe, du spectacle, de l’artiste.',
+    placeholder: () => projet() ? 'ex. Une saison au conservatoire' : 'ex. Quatuor Lumière',
+    get: () => S.nom, set: v => { S.nom = v; },
+    validate: () => S.nom.trim() ? null : 'Un nom, même provisoire, pour que je m’y retrouve.'},
+  {id: 'formule', kind: 'single', sec: () => SEC_PROJET, show: () => S.type === 'spectacle',
+    title: () => `Quelle formule pour ${nomCourt()} ?`,
+    hint: () => 'Prix pour un spectacle d’une heure à 1 h 30, sur une date. La suite du questionnaire ajuste l’estimation.',
+    opts: () => toOpts(FORMULES, v => ({price: v === 'mesure' ? null : '≈ ' + fmt(refPrix(v))})),
+    get: () => S.formule, set: applyFormule},
+  {id: 'clipStyle', kind: 'single', sec: () => SEC_PROJET, show: () => S.type === 'clip',
+    title: () => 'Quel genre de clip imaginez-vous ?',
+    opts: () => toOpts(CLIP), get: () => S.clipStyle, set: v => { S.clipStyle = v; }},
+  {id: 'desc', kind: 'textarea', sec: () => SEC_PROJET, show: () => projet(),
+    title: () => S.type === 'docu' ? 'Racontez-moi le projet' : 'Que voulez-vous filmer ?',
+    hint: () => S.type === 'docu' ? 'Le sujet, ce que vous imaginez, à qui il s’adresse. Quelques lignes suffisent.' : 'Décrivez votre idée en quelques lignes, je vous dirai ce que je peux faire.',
+    placeholder: () => S.type === 'docu' ? 'ex. Suivre la création de notre spectacle, des répétitions à la première…' : 'ex. Une remise de prix, une conférence, un mariage musical…',
+    get: () => S.desc, set: v => { S.desc = v; },
+    validate: () => S.desc.trim().length >= 5 ? null : 'Quelques mots suffisent, mais j’en ai besoin pour estimer.'},
+  {id: 'services', kind: 'multi', sec: () => SEC_PROJET, show: () => !(S.type === 'spectacle' && S.formule && S.formule !== 'mesure'),
+    title: () => 'Qu’attendez-vous de moi ?',
+    hint: () => 'Plusieurs choix possibles.',
+    opts: () => [
+      {v: 'tournage', t: 'Filmer', s: S.type === 'clip' || S.type === 'docu' ? 'Je viens tourner avec mon matériel' : 'Je viens avec mes caméras'},
+      {v: 'montage', t: 'Monter', s: 'Montage, étalonnage, titres'},
+      {v: 'mixage', t: 'Mixer le son', s: S.type === 'clip' ? 'Seulement si le titre n’est pas encore mixé' : 'Un son propre et équilibré'},
+    ],
+    get: k => S.services[k], toggle: k => { S.services[k] = !S.services[k]; },
+    validate: () => Object.values(S.services).some(Boolean) ? null : 'Choisissez au moins une prestation.'},
+  {id: 'quand', kind: 'custom', sec: secTournage, show: () => S.services.tournage,
+    title: () => ({spectacle: 'Quand et où a lieu le spectacle ?', teaser: 'Quand et où puis-je venir filmer ?', morceaux: 'Quand et où filmer ?', clip: 'Quels jours de tournage, et où ?', docu: 'Quels jours de tournage, et où ?'})[S.type] || 'Quand et où ?',
+    hint: () => S.type === 'spectacle' ? 'Plusieurs représentations ? Ajoutez chaque date.' : (S.type === 'clip' || S.type === 'docu') ? 'Une ligne par jour de tournage.' : 'Plusieurs dates ? Ajoutez-les.',
+    render: renderQuand,
+    validate: () => {
+      if (!S.flou && !S.dates.some(r => r.d)) return 'Indiquez au moins une date, ou cochez « Pas encore de date précise ».';
+      return null;
+    }},
+  {id: 'meme', kind: 'single', sec: secTournage, show: () => S.type === 'spectacle' && S.services.tournage && nbDates() > 1,
+    title: () => `Ces ${nbDates()} dates, c’est…`,
+    opts: () => toOpts(MEME), get: () => S.memeSpectacle, set: v => { S.memeSpectacle = v; }},
+  {id: 'formation', kind: 'single', sec: () => 'Sur scène', show: () => ['spectacle', 'teaser', 'morceaux', 'clip'].includes(S.type),
+    title: () => S.type === 'clip' ? 'Qui joue dans le clip ?' : 'Qui sera sur scène ?',
+    opts: () => toOpts(FORMATIONS), get: () => S.formation, set: v => { S.formation = v; },
+    noAuto: () => true, after: renderInstruments},
+  {id: 'cameras', kind: 'single', sec: secTournage,
+    show: () => (S.type === 'teaser' || S.type === 'morceaux' || (S.type === 'spectacle' && S.formule === 'mesure')) && (S.services.tournage || S.services.montage),
+    title: () => S.services.tournage ? 'Combien de caméras ?' : 'Vos images viennent de combien de caméras ?',
+    hint: () => S.services.tournage ? 'Plus il y a d’angles, plus le montage est vivant.' : null,
+    opts: () => S.services.tournage
+      ? [{v: 'conseil', t: 'Conseillez-moi', s: conseilTxt()}, ...toOpts(CAMS)]
+      : toOpts(CAMS_FOURNIES),
+    get: () => S.services.tournage ? S.cameras : S.camerasFournies,
+    set: v => { if (S.services.tournage) S.cameras = v; else S.camerasFournies = v; }},
+  {id: 'duree', kind: 'single', sec: secTournage, show: () => S.type === 'spectacle',
+    title: () => S.memeSpectacle === 'differents' && nbDates() > 1 ? 'Combien de temps dure chaque concert ?' : 'Combien de temps dure le spectacle ?',
+    hint: () => 'Entracte compris, à peu près.',
+    opts: () => toOpts(DUREES), get: () => S.duree, set: v => { S.duree = v; }},
+  {id: 'nbMorceaux', kind: 'custom', sec: secTournage, show: () => S.type === 'morceaux',
+    title: () => 'Combien de morceaux ?',
+    hint: () => 'Chaque morceau devient une vidéo.',
+    render: box => box.append(stepper(() => S.nbMorceaux, v => { S.nbMorceaux = v; }, 1, 30, 'Nombre de morceaux'))},
+  {id: 'dureeFinale', kind: 'single', sec: () => 'Le montage', show: () => S.type === 'docu' && post(),
+    title: () => 'Quelle durée pour le film terminé ?',
+    opts: () => toOpts(DUREES_FILM), get: () => S.dureeFinale, set: v => { S.dureeFinale = v; }},
+  {id: 'livrables', kind: 'multi', sec: () => 'Le montage', show: () => S.services.montage && !!LIVRABLES[S.type],
+    title: () => 'Qu’aimeriez-vous recevoir ?',
+    hint: () => S.type === 'spectacle' ? 'Plusieurs choix possibles.' : S.type === 'teaser' ? 'Le teaser d’une minute est compris. Des options en plus ?' : 'Des options en plus ? Sinon, continuez.',
+    opts: () => toOpts(LIVRABLES[S.type]),
+    get: k => !!S.livrables[k], toggle: k => { S.livrables[k] = !S.livrables[k]; },
+    validate: () => S.type !== 'spectacle' || ['entier', 'teaser', 'morceaux'].some(k => S.livrables[k]) ? null : 'Choisissez au moins le spectacle entier, le teaser ou les morceaux séparés.'},
+  {id: 'son', kind: 'single', sec: () => 'Le son', show: () => S.services.mixage && ['spectacle', 'teaser', 'morceaux'].includes(S.type),
+    title: () => S.services.tournage ? 'Et le son, comment ça se passe ?' : 'Qu’avez-vous comme son ?',
+    opts: () => toOpts(S.services.tournage ? SONS_TOURNAGE : SONS_FOURNIS),
+    get: () => S.son, set: v => { S.son = v; }},
+  {id: 'budget', kind: 'single', sec: () => SEC_DETAILS, show: () => ['clip', 'docu', 'autre'].includes(S.type),
+    title: () => 'Avez-vous un budget en tête ?',
+    hint: () => 'Ça m’aide à vous proposer la bonne formule.',
+    opts: () => toOpts(BUDGETS), get: () => S.budget, set: v => { S.budget = v; }},
+  {id: 'delai', kind: 'single', sec: () => SEC_DETAILS, show: () => post(),
+    title: () => 'Pour quand vous faut-il la vidéo ?',
+    opts: () => toOpts(DELAIS, v => ({s: delaiSub(v)})),
+    get: () => S.delai, set: v => { S.delai = v; },
+    noAuto: v => v === 'date', after: renderDelaiDate,
+    validate: () => {
+      if (!S.delai) return 'Choisissez une réponse pour continuer.';
+      if (S.delai === 'date') {
+        if (!S.delaiDate) return 'Indiquez la date.';
+        const ld = lastDate();
+        if (ld && S.delaiDate < ld) return 'Cette date tombe avant le tournage.';
+      }
+      return null;
+    }},
+  {id: 'estimation', kind: 'custom', sec: () => 'Récapitulatif',
+    title: () => S.type === 'autre' ? 'Votre demande' : 'Votre estimation',
+    render: renderEstimation, button: () => 'Demander un devis précis'},
+  {id: 'contact', kind: 'custom', sec: () => 'Dernière étape',
+    title: () => 'Comment je vous recontacte ?',
+    hint: () => 'Je vous réponds avec un devis précis, sans engagement.',
+    render: renderContact, button: () => 'Envoyer ma demande',
+    validate: () => {
+      if (!S.contact.nom.trim()) return 'Indiquez votre nom.';
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(S.contact.email.trim())) return 'Cette adresse email ne semble pas complète.';
+      return null;
+    }},
+  {id: 'fin', meta: true, show: () => false, render: renderFin, noFoot: true},
+  {id: 'echec', meta: true, show: () => false, render: renderEchec, noFoot: true},
+];
+const idx = id => STEPS.findIndex(s => s.id === id);
+const shown = st => !st.show || st.show();
+const has = id => shown(STEPS[idx(id)]);
+const visible = () => STEPS.filter(st => shown(st));
+const questions = () => visible().filter(st => !st.meta);
+
+function conseilTxt() {
+  const c = CONSEIL[S.type] || CONSEIL.spectacle;
+  const f = FORMATIONS[S.formation];
+  const n = c[S.formation] || c._;
+  return f ? `${f.pour}, je conseille ${CAMS[n].t}` : 'Je vous propose le bon dispositif selon la scène';
+}
+function delaiSub(v) {
+  const apres = S.services.tournage ? ' après le tournage' : '';
+  if (v === 'souple') return S.services.tournage ? 'Dans les semaines qui suivent le tournage' : 'Dans les semaines qui viennent';
+  if (v === 'urgent') return `Moins de 10 jours${apres}, avec un supplément express de 20 %`;
+  return DELAIS[v].s;
+}
+
+/* =====================================================================
+   Affichage
+   ===================================================================== */
+let cur = 0, depth = 0, advTimer = null, resumeAt = null, preset = false, sending = false, retourRecap = false;
+
+function render(dir = 1) {
+  const st = STEPS[cur];
+  const box = h('section', {class: 'step' + (dir < 0 ? ' rev' : dir === 0 ? ' still' : '')});
+  if (!st.meta) {
+    if (st.sec) box.append(h('p', {class: 'eyebrow'}, st.sec()));
+    box.append(h('h1', {class: 'q', id: 'q', tabindex: '-1'}, st.title()));
+    const hint = st.hint && st.hint();
+    if (hint) box.append(h('p', {class: 'hint'}, hint));
+  }
+  if (st.kind === 'single') renderChoix(st, box, false);
+  else if (st.kind === 'multi') renderChoix(st, box, true);
+  else if (st.kind === 'text' || st.kind === 'textarea') renderTexte(st, box);
+  else st.render(box);
+  $('#main').replaceChildren(box);
+
+  const qs = questions(), i = qs.indexOf(st);
+  $('#bar').style.width = st.id === 'welcome' ? '0%' : i < 0 ? '100%' : `${Math.round(i / qs.length * 100)}%`;
+  $('#count').textContent = i >= 0 ? `${i + 1}/${qs.length}` : '';
+  $('#back').hidden = st.id === 'welcome' || st.id === 'fin';
+  $('#foot').hidden = !!st.noFoot;
+  $('#next').textContent = st.button ? st.button() : 'Continuer';
+  $('#next').disabled = false;
+  hideErr();
+  if (dir !== 0) {
+    window.scrollTo(0, 0);
+    const af = box.querySelector('[data-autofocus]') || box.querySelector('h1');
+    if (af) af.focus({preventScroll: true});
+  }
+}
+
+function optEl(o, multi, onpick) {
+  const b = h('button', {
+      type: 'button', role: multi ? 'checkbox' : 'radio',
+      class: 'opt' + (o.ico ? ' has-ico' : '') + (multi ? ' check' : ''),
+      'aria-checked': 'false', 'data-v': String(o.v), onclick: onpick,
+    },
+    o.ico && h('span', {class: 'ico', html: svg(ICONS[o.ico])}),
+    h('span', {},
+      h('span', {class: 't'}, o.t, o.tag && h('span', {class: 'tag'}, o.tag)),
+      o.s && h('span', {class: 's'}, o.s),
+      o.price && h('span', {class: 'pr'}, o.price)),
+    h('span', {class: 'mk', html: SVG_CHECK}));
+  return b;
+}
+function renderChoix(st, box, multi) {
+  const group = h('div', {class: 'opts', role: multi ? 'group' : 'radiogroup', 'aria-labelledby': 'q'});
+  const afterBox = st.after ? h('div', {class: 'after'}) : null;
+  const draw = () => {
+    for (const b of group.children) {
+      const v = b.dataset.v;
+      b.setAttribute('aria-checked', String(multi ? !!st.get(v) : String(st.get()) === v));
+    }
+    if (afterBox) afterBox.replaceChildren(st.after() || '');
+  };
+  for (const o of st.opts()) {
+    group.append(optEl(o, multi, () => {
+      hideErr();
+      if (multi) { st.toggle(o.v); save(); draw(); return; }
+      st.set(o.v); save(); draw();
+      clearTimeout(advTimer);
+      if (st.noAuto && st.noAuto(o.v)) {
+        const f = afterBox && afterBox.querySelector('input:not([type=checkbox]), textarea');
+        if (f && o.v === 'date') f.focus();
+        return;
+      }
+      advTimer = setTimeout(() => { if (STEPS[cur] === st) next(); }, 230);
+    }));
+  }
+  box.append(group);
+  if (afterBox) box.append(afterBox);
+  draw();
+}
+function renderTexte(st, box) {
+  const area = st.kind === 'textarea';
+  const el = area
+    ? h('textarea', {rows: '5', placeholder: st.placeholder(), 'aria-labelledby': 'q', 'data-autofocus': true}, st.get())
+    : h('input', {type: 'text', value: st.get(), placeholder: st.placeholder(), 'aria-labelledby': 'q', autocapitalize: 'words', autocomplete: 'off', enterkeyhint: 'next', 'data-autofocus': true});
+  el.addEventListener('input', () => { st.set(el.value); save(); hideErr(); });
+  if (!area) el.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); next(); } });
+  box.append(el);
+}
+function champ(label, facultatif, input) {
+  return h('div', {class: 'field'},
+    h('label', {for: input.id}, label, facultatif && h('span', {class: 'opt-l'}, ' (facultatif)')),
+    input);
+}
+function stepper(get, set, min, max, label) {
+  const out = h('output', {'aria-live': 'polite'}, String(get()));
+  const upd = d => { const v = Math.min(max, Math.max(min, get() + d)); set(v); out.textContent = v; save(); };
+  return h('div', {class: 'stepper', role: 'group', 'aria-label': label},
+    h('button', {type: 'button', 'aria-label': 'Un de moins', onclick: () => upd(-1)}, '−'),
+    out,
+    h('button', {type: 'button', 'aria-label': 'Un de plus', onclick: () => upd(1)}, '+'));
+}
+
+function renderQuand(box) {
+  const heure = ['spectacle', 'teaser', 'morceaux'].includes(S.type);
+  const nh = heure ? '' : ' nohour';
+  const list = h('div', {class: 'dates'});
+  const head = h('div', {class: 'daterow-head' + nh, 'aria-hidden': 'true'}, h('span', {}, 'Date'), heure && h('span', {}, 'Heure'), h('span'));
+  const drawRows = () => {
+    list.replaceChildren(...S.dates.map((r, i) => {
+      const d = h('input', {type: 'date', value: r.d, min: TODAY, 'aria-label': `Date ${i + 1}`});
+      d.addEventListener('input', () => { r.d = d.value; save(); hideErr(); });
+      const t = heure && h('input', {type: 'time', value: r.h, 'aria-label': `Heure ${i + 1}, facultatif`});
+      if (t) t.addEventListener('input', () => { r.h = t.value; save(); });
+      return h('div', {class: 'daterow' + nh}, d, t,
+        h('button', {type: 'button', class: 'rm', html: SVG_X, 'aria-label': `Retirer la date ${i + 1}`, hidden: S.dates.length < 2,
+          onclick: () => { S.dates.splice(i, 1); drawRows(); save(); }}));
+    }));
+  };
+  drawRows();
+  const addLbl = S.type === 'spectacle' ? 'Ajouter une représentation' : (S.type === 'clip' || S.type === 'docu') ? 'Ajouter un jour' : 'Ajouter une date';
+  const add = h('button', {type: 'button', class: 'addrow', onclick: () => {
+    S.dates.push({d: '', h: ''}); drawRows(); save();
+    list.lastChild.querySelector('input').focus();
+  }}, '+ ' + addLbl);
+  const datesBox = h('div', {hidden: S.flou}, head, list, add);
+
+  const unite = S.type === 'clip' || S.type === 'docu' ? 'Combien de jours de tournage, environ ?' : S.type === 'spectacle' ? 'Combien de représentations ?' : 'Combien de dates ?';
+  const periode = h('input', {type: 'text', id: 'f-periode', value: S.periode, placeholder: 'ex. printemps 2027, fin mai', autocomplete: 'off'});
+  periode.addEventListener('input', () => { S.periode = periode.value; save(); });
+  const flouBox = h('div', {class: 'flou', hidden: !S.flou},
+    h('div', {class: 'field'}, h('span', {class: 'lbl-row'}, unite), stepper(() => S.nbApprox, v => { S.nbApprox = v; }, 1, 60, unite)),
+    champ('Période envisagée', true, periode));
+  const cb = h('input', {type: 'checkbox', checked: S.flou});
+  cb.addEventListener('change', () => {
+    S.flou = cb.checked; datesBox.hidden = S.flou; flouBox.hidden = !S.flou; save(); hideErr();
+  });
+  const lieu = h('input', {type: 'text', id: 'f-lieu', value: S.lieu, placeholder: 'Nom de la salle, ville', autocomplete: 'off', autocapitalize: 'words', enterkeyhint: 'done'});
+  lieu.addEventListener('input', () => { S.lieu = lieu.value; save(); });
+  lieu.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); lieu.blur(); } });
+
+  box.append(datesBox, h('label', {class: 'toggle'}, cb, 'Pas encore de date précise'), flouBox,
+    h('hr', {class: 'sep'}), champ('Lieu', true, lieu));
+}
+function renderInstruments() {
+  const t = h('textarea', {id: 'f-instr', rows: '3', placeholder: 'ex. piano, voix et contrebasse, du jazz'}, S.instruments);
+  t.style.minHeight = '84px';
+  t.addEventListener('input', () => { S.instruments = t.value; save(); });
+  return champ('Instruments, style', true, t);
+}
+function renderDelaiDate() {
+  if (S.delai !== 'date') return null;
+  const note = h('p', {class: 'small'});
+  const maj = () => { note.textContent = S.delaiDate && urgent() ? 'Moins de 10 jours après le tournage : supplément express de 20 %.' : ''; };
+  const d = h('input', {type: 'date', id: 'f-delai', value: S.delaiDate, min: lastDate() || TODAY});
+  d.addEventListener('input', () => { S.delaiDate = d.value; save(); hideErr(); maj(); });
+  maj();
+  return h('div', {}, champ('Date de livraison souhaitée', false, d), note);
+}
+
+function renderEstimation(box) {
+  const E = estimer(), F = fourchette(E);
+  box.append(h('div', {class: 'est'},
+    h('div', {class: 'lbl'}, h('i', {'aria-hidden': 'true'}), E.mode === 'ordre' ? 'Ordre de grandeur' : 'Estimation'),
+    h('div', {class: 'big' + (F.range ? ' range' : '')}, F.big),
+    h('div', {class: 'rng'}, F.sub),
+    E.lignes.length ? h('ul', {}, E.lignes.map(l => h('li', {}, h('span', {}, l.label), h('b', {}, prixLigne(l))))) : null));
+
+  const notes = [];
+  if (E.mode !== 'devis') notes.push('Prix TTC, à titre indicatif : le devis précis dépend des détails que nous verrons ensemble.');
+  notes.push(CONFIG.noteDeplacement);
+  if (S.services.montage) notes.push('Toujours compris : étalonnage, export en haute définition, livraison par lien de téléchargement.');
+  if (S.services.tournage && !S.services.montage) notes.push('Sans montage, vous recevez les fichiers bruts de chaque caméra.');
+  if (S.type === 'clip') notes.push('Pour un clip, le prix dépend surtout du scénario : lieux, décors, comédiens, nombre de plans.');
+  if (S.type === 'docu') notes.push('Un documentaire se construit au fil du projet : cette fourchette sert de point de départ pour en parler.');
+  box.append(h('ul', {class: 'notes'}, notes.map(n => h('li', {}, n))));
+  const tip = astuce(E);
+  if (tip) box.append(h('p', {class: 'tip'}, h('b', {}, tip[0]), tip[1]));
+
+  box.append(h('div', {class: 'recap'},
+    h('h2', {}, 'Votre demande'),
+    h('dl', {}, rows().map(([k, v, id]) => h('div', {class: 'row'},
+      h('dt', {}, k), h('dd', {}, v),
+      h('button', {type: 'button', class: 'edit', 'aria-label': `Modifier : ${k}`, onclick: () => edit(id)}, 'Modifier'))))));
+}
+
+function renderContact(box) {
+  const inp = (id, type, key, attrs) => {
+    const el = h('input', {id, type, value: S.contact[key], ...attrs});
+    el.addEventListener('input', () => { S.contact[key] = el.value; save(); hideErr(); });
+    el.addEventListener('keydown', e => {
+      if (e.key !== 'Enter') return;
+      e.preventDefault();
+      const all = [...box.querySelectorAll('input:not(.hp), textarea')];
+      const n = all[all.indexOf(el) + 1];
+      if (n) n.focus();
+    });
+    return el;
+  };
+  const msg = h('textarea', {id: 'c-msg', rows: '4', placeholder: 'Lien vers votre musique, accès au lieu, idées, questions…'}, S.message);
+  msg.addEventListener('input', () => { S.message = msg.value; save(); });
+  const hp = h('input', {type: 'text', class: 'hp', name: '_honey', tabindex: '-1', autocomplete: 'off', 'aria-hidden': 'true'});
+  hp.addEventListener('input', () => { S.honey = hp.value; });
+  box.append(
+    champ('Votre nom', false, inp('c-nom', 'text', 'nom', {autocomplete: 'name', autocapitalize: 'words', enterkeyhint: 'next', 'data-autofocus': true})),
+    champ('Email', false, inp('c-email', 'email', 'email', {autocomplete: 'email', inputmode: 'email', autocapitalize: 'off', spellcheck: 'false', enterkeyhint: 'next'})),
+    champ('Téléphone', true, inp('c-tel', 'tel', 'tel', {autocomplete: 'tel', inputmode: 'tel', enterkeyhint: 'next'})),
+    champ('Un mot à ajouter', true, msg),
+    hp,
+    h('p', {class: 'small'}, 'Vos coordonnées servent uniquement à répondre à votre demande.'));
+}
+
+function renderWelcome(box) {
+  box.classList.add('welcome');
+  const logo = h('img', {class: 'logo', src: CONFIG.logo, alt: '', width: '116', height: '116'});
+  logo.addEventListener('error', () => logo.remove());
+  box.append(logo,
+    h('h1', {class: 'q', tabindex: '-1'}, 'Parlons de votre vidéo'),
+    h('p', {class: 'lead'}, 'Je vous pose quelques questions, une à la fois. À la fin, vous voyez une estimation du prix, et votre demande m’arrive directement.'),
+    h('ul', {class: 'meta'}, h('li', {}, '2 minutes'), h('li', {}, 'Sans engagement'), h('li', {}, 'Prix estimé tout de suite')));
+  if (resumeAt) {
+    box.append(h('div', {class: 'resume'},
+      h('p', {}, `Vous aviez commencé une demande${S.nom.trim() ? ` pour ${S.nom.trim()}` : ''}. Elle vous attend là où vous l’aviez laissée.`),
+      h('button', {type: 'button', class: 'linkbtn', onclick: () => {
+        S = blank(); resumeAt = null; forget();
+        if (TYPES[qType]) { setType(qType); preset = true; }
+        render(0);
+      }}, 'Recommencer à zéro')));
+  }
+  box.append(h('details', {class: 'tarifs'},
+    h('summary', {}, 'Voir les tarifs indicatifs'),
+    h('ul', {}, [
+      ['Captation complète', '5 à 7 caméras, spectacle entier, teaser, son mixé', '≈ ' + fmt(refPrix('complete'))],
+      ['Captation essentielle', '3 à 4 caméras, spectacle entier, son mixé', '≈ ' + fmt(refPrix('essentielle'))],
+      ['Teaser', 'Filmé avec 2 caméras, une minute montée et mixée', 'dès ' + fmt(refPrix('teaser'))],
+      ['Live session', 'Un morceau filmé avec 3 à 4 caméras, monté et mixé', '≈ ' + fmt(refPrix('session'))],
+      ['Clip', 'Une journée de tournage, montage et étalonnage', 'dès ' + fmt(refPrix('clip'))],
+      ['Documentaire, projet spécial', 'Selon les jours de tournage et la durée du film', 'sur estimation'],
+    ].map(([t, s, p]) => h('li', {}, h('span', {}, t, h('small', {}, s)), h('b', {}, p)))),
+    h('p', {class: 'small'}, 'Prix TTC, pour une date et un spectacle d’une heure à 1 h 30. ' + CONFIG.noteDeplacement)));
+}
+
+function boutonCopie(label = 'Copier ma demande') {
+  const b = h('button', {type: 'button', class: 'btn ghost', onclick: async () => {
+    const txt = texte();
+    let ok = false;
+    try { await navigator.clipboard.writeText(txt); ok = true; } catch (e) {
+      try {
+        const t = h('textarea', {style: 'position:fixed;opacity:0'}, txt);
+        document.body.append(t); t.select(); ok = document.execCommand('copy'); t.remove();
+      } catch (e2) { ok = false; }
+    }
+    b.textContent = ok ? 'Copié !' : 'Copie impossible sur cet appareil';
+  }}, label);
+  return b;
+}
+function renderFin(box) {
+  const F = fourchette(estimer());
+  const prenom = S.contact.nom.trim().split(/\s+/)[0];
+  box.append(
+    h('div', {class: 'done-ico', html: svg(ICONS.clap, 1.7)}),
+    h('h1', {class: 'q', tabindex: '-1'}, 'C’est dans la boîte !'),
+    h('p', {class: 'lead'}, `Merci ${prenom}, votre demande est bien partie. Je vous réponds dès que possible à ${S.contact.email.trim()}.`),
+    F.court !== 'sur devis' && h('p', {class: 'hint'}, `Pour mémoire, l’estimation : ${F.court}.`),
+    h('div', {class: 'actions'},
+      boutonCopie('Copier le récapitulatif'),
+      h('button', {type: 'button', class: 'btn ghost', onclick: () => { S = blank(); resumeAt = null; forget(); go(idx('welcome'), 1); }}, 'Faire une autre demande'),
+      h('a', {class: 'btn ghost', href: CONFIG.site}, 'Retour au site')));
+}
+function renderEchec(box) {
+  const mailto = `mailto:${CONFIG.email}?subject=${encodeURIComponent(sujet())}&body=${encodeURIComponent(texte().replace(/\n/g, '\r\n'))}`;
+  const retry = h('button', {type: 'button', class: 'btn ghost', onclick: () => envoyer(retry)}, 'Réessayer l’envoi');
+  box.append(
+    h('h1', {class: 'q', tabindex: '-1'}, 'L’envoi n’a pas abouti'),
+    h('p', {class: 'lead'}, 'Pas de souci : votre demande est prête, il suffit de l’envoyer depuis votre messagerie.'),
+    h('div', {class: 'actions'}, h('a', {class: 'btn', href: mailto}, 'Ouvrir ma messagerie'), retry, boutonCopie()),
+    h('p', {class: 'small'}, `Ou écrivez-moi directement à ${CONFIG.email}.`));
+}
+
+/* =====================================================================
+   Navigation
+   ===================================================================== */
+function showErr(m) { $('#err').textContent = m; }
+function hideErr() { const e = $('#err'); if (e) e.textContent = ''; }
+
+function go(i, dir = 1, mode = 'push') {
+  cur = i;
+  render(dir);
+  if (mode === 'push') { history.pushState({i}, ''); depth++; }
+  else if (mode === 'replace') history.replaceState({i}, '');
+  save();
+}
+const goId = (id, dir = 1) => go(idx(id), dir);
+
+function validStep(st) {
+  if (st.validate) return st.validate();
+  if (st.kind === 'single') return st.get() ? null : 'Choisissez une réponse pour continuer.';
+  return null;
+}
+function next() {
+  clearTimeout(advTimer);
+  const st = STEPS[cur];
+  if (st.id === 'welcome') {
+    if (resumeAt) { const i = resumeAt; resumeAt = null; return go(i); }
+    return goId(preset ? 'nom' : 'type');
+  }
+  const err = validStep(st);
+  if (err) { showErr(err); return; }
+  if (st.id === 'contact') return envoyer($('#next'));
+  const vis = visible().filter(s => !s.meta);
+  const est = vis.findIndex(s => s.id === 'estimation');
+  if (retourRecap && vis.slice(0, est).every(s => !validStep(s))) {
+    retourRecap = false;
+    return goId('estimation');
+  }
+  const i = vis.indexOf(st);
+  go(STEPS.indexOf(vis[i + 1]));
+}
+function back() {
+  clearTimeout(advTimer);
+  if (depth > 0) { history.back(); return; }
+  const vis = visible(), i = vis.indexOf(STEPS[cur]);
+  if (i > 0) go(STEPS.indexOf(vis[i - 1]), -1, 'replace');
+}
+function edit(id) { retourRecap = true; go(idx(id), -1); }
+
+window.addEventListener('popstate', e => {
+  clearTimeout(advTimer);
+  let i = e.state && Number.isInteger(e.state.i) ? e.state.i : 0;
+  if (S.envoye && STEPS[i].id !== 'fin') { history.pushState({i: cur}, ''); return; }
+  const dir = i < cur ? -1 : 1;
+  depth = Math.max(0, depth + dir);
+  if (STEPS[i].meta && STEPS[i].id !== 'welcome') i = idx('contact');
+  while (i > 0 && !shown(STEPS[i])) i--;
+  cur = i;
+  render(dir);
+  save();
+});
+
+/* =====================================================================
+   Envoi
+   ===================================================================== */
+async function envoyer(btn) {
+  if (sending) return;
+  sending = true;
+  const label = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Envoi en cours…';
+  let ok = false;
+  try {
+    const ctl = new AbortController();
+    const to = setTimeout(() => ctl.abort(), 20000);
+    const r = await fetch(ENDPOINT, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', Accept: 'application/json'},
+      body: JSON.stringify(payload()), signal: ctl.signal,
+    });
+    clearTimeout(to);
+    const j = await r.json().catch(() => ({}));
+    ok = r.ok && String(j.success) === 'true';
+  } catch (e) { ok = false; }
+  sending = false;
+  btn.disabled = false; btn.textContent = label;
+  if (ok) { S.envoye = true; forget(); goId('fin'); }
+  else if (STEPS[cur].id !== 'echec') goId('echec');
+}
+
+/* =====================================================================
+   Sauvegarde du brouillon (sur ce téléphone seulement)
+   ===================================================================== */
+const KEY = 'tm-devis-1';
+function save() {
+  if (S.envoye) return;
+  try { localStorage.setItem(KEY, JSON.stringify({S, cur, t: Date.now()})); } catch (e) { /* navigation privée */ }
+}
+function forget() { try { localStorage.removeItem(KEY); } catch (e) { /* rien */ } }
+function load() {
+  try {
+    const o = JSON.parse(localStorage.getItem(KEY));
+    if (o && o.S && Date.now() - o.t < 30 * 864e5) return o;
+  } catch (e) { /* rien */ }
+  return null;
+}
+
+/* =====================================================================
+   Démarrage
+   ===================================================================== */
+$('#next').addEventListener('click', next);
+$('#back').addEventListener('click', back);
+const saved = load();
+if (saved && saved.cur > 1 && STEPS[saved.cur] && !STEPS[saved.cur].meta && !saved.S.envoye) {
+  const b = blank();
+  S = {...b, ...saved.S, services: {...b.services, ...saved.S.services}, contact: {...b.contact, ...saved.S.contact}};
+  resumeAt = shown(STEPS[saved.cur]) ? saved.cur : null;
+}
+const qType = new URLSearchParams(location.search).get('type');
+if (!resumeAt && qType && TYPES[qType]) { setType(qType); preset = true; }
+history.replaceState({i: 0}, '');
+render(0);
+
+// Accès pour les essais automatiques
+window.TMDevis = {get S() { return S; }, set S(v) { S = v; }, get etape() { return STEPS[cur].id; }, estimer, fourchette, refPrix, rows, texte, payload, goId, T};
+})();
+</script>
+</body>
+</html>
