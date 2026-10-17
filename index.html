@@ -198,6 +198,27 @@ input:focus, textarea:focus { outline: none; border-color: var(--accent); box-sh
 .stepper button:active { background: var(--accent-soft); }
 .stepper output { min-width: 56px; text-align: center; font-family: var(--f-head); font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
 
+.seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 4px; border: 1.5px solid var(--line-strong); border-radius: 14px; background: var(--surface); }
+.seg button { min-height: 44px; padding: 6px 4px; border: 0; border-radius: 10px; background: transparent; color: var(--muted); font-weight: 650; font-size: 15px; line-height: 1.2; }
+.seg button[aria-checked="true"] { background: var(--accent); color: var(--accent-ink); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { min-height: 40px; padding: 7px 14px; border-radius: 999px; border: 1.5px solid var(--line-strong); background: var(--surface); font-size: 15px; font-weight: 600; }
+.chip[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+.small a { color: var(--accent); font-weight: 600; }
+
+.sugg { display: grid; margin-top: 4px; border: 1.5px solid var(--line-strong); border-radius: 12px; background: var(--surface); overflow: hidden; box-shadow: var(--shadow); }
+.sugg-it { min-height: 46px; padding: 10px 14px; text-align: left; border: 0; border-top: 1px solid var(--line); background: transparent; font-size: 15px; color: var(--muted); }
+.sugg-it:first-child { border-top: 0; }
+.sugg-it b { color: var(--ink); font-weight: 650; }
+.sugg-it:active, .sugg-it:focus-visible { background: var(--accent-soft); outline: none; }
+.ville-info { margin: 2px 0 0; }
+.ville-info:empty { display: none; }
+.live { margin: 0 0 8px; text-align: center; font-size: 14px; color: var(--muted); }
+.live b { display: inline-block; color: var(--accent); font-size: 15px; font-weight: 700; }
+.live.bump b { animation: bump .45s ease; }
+@keyframes bump { 40% { transform: scale(1.14); } }
+@media (prefers-reduced-motion: reduce) { .live.bump b { animation: none; } }
+
 /* Estimation */
 .est { background: var(--est-bg); color: var(--est-ink); border-radius: 20px; padding: 20px 20px 10px; }
 .est .lbl { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; opacity: .85; }
@@ -249,8 +270,8 @@ details.tarifs[open] summary::after { content: '\2212'; }
 /* Barre du bas */
 .bar {
   position: sticky; bottom: 0; z-index: 4;
-  padding: 10px 16px calc(12px + env(safe-area-inset-bottom, 0px));
-  background: linear-gradient(to bottom, transparent, var(--bg) 22px);
+  padding: 18px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(to bottom, transparent, var(--bg) 16px);
 }
 .bar .inner { max-width: 568px; margin: 0 auto; }
 .err { min-height: 0; margin: 0 0 8px; color: var(--warn); font-weight: 600; font-size: 15px; }
@@ -285,6 +306,7 @@ noscript p { max-width: 560px; margin: 40px auto; padding: 0 16px; }
   <main id="main" tabindex="-1"></main>
   <div class="bar" id="foot">
     <div class="inner">
+      <p class="live" id="live" hidden></p>
       <p class="err" id="err" role="alert"></p>
       <button class="btn" id="next" type="button">Continuer</button>
     </div>
@@ -305,23 +327,31 @@ const CONFIG = {
   formsubmitAlias: '',
   site: 'https://www.tele-marmotte.com/',
   logo: 'https://image.jimcdn.com/app/cms/image/transf/dimension=240x10000:format=jpg/path/s2a878a15d7bf552c/image/i2e80acb7fc793f25/version/1521546626/image.jpg',
+  confidentialite: 'https://www.tele-marmotte.com/j/privacy',
   noteDeplacement: 'Hors frais de déplacement depuis Strasbourg (67200), précisés dans le devis selon le lieu.',
+  // Point de départ des déplacements (centre de la commune, d'après geo.api.gouv.fr).
+  depart: {nom: 'Strasbourg', lat: 48.5691, lon: 7.7621},
+  // Règle des frais : km aller au-delà de gratuitKm, × 2 (aller-retour) × euroParKm, par jour de tournage.
+  // Tant que euroParKm vaut null, la page affiche seulement la distance, sans prix.
+  deplacement: {gratuitKm: null, euroParKm: null, facteurRoute: 1.2},
 };
 const ENDPOINT = 'https://formsubmit.co/ajax/' + (CONFIG.formsubmitAlias || CONFIG.email);
 
 /* Tarifs TTC. Calibrage : 5 à 7 caméras + spectacle entier (1 h à 1 h 30) + teaser + mixage = 800 €. */
 const T = {
   captation: {2: 200, 4: 280, 6: 350, 8: 450},  // une date : installation, caméras, rushes
-  reprise: 0.6,                                   // chaque représentation en plus du même spectacle
+  reprise: 0.8,                                   // chaque représentation en plus du même spectacle
   montage: {2: 150, 4: 200, 6: 250, 8: 300},      // spectacle entier d'1 h à 1 h 30
   duree: {30: 0.5, 60: 0.75, 90: 1, 120: 1.25, 180: 1.5},
-  montageReprise: 0.2,                            // plus de rushes à comparer par représentation en plus
+  montageReprise: 0.5,                            // comparer chaque passage entre les soirs, recaler les raccords
   mixageReprise: 0.3,
   teaser: 100, teaserSeul: 150, versionCourte: 30,
   mixage: 100, recalage: 40, sonCamera: 0.6,
-  prep: 80,                                       // fichiers fournis par le client (synchro, tri)
+  prep: 150,                                      // fichiers fournis par le client (synchro, tri)
+  montageSeul: 1.2,                               // montage de rushes que je n'ai pas tournés
+  minimum: 250,                                   // aucune estimation en dessous
   verticale: 50, morceauxSepares: 50, titres: 50,
-  morceaux: {captation: 0.8, montage: {2: 40, 4: 60, 6: 80, 8: 100}, mixage: 40, recalage: 15, titres: 30, degressif: 0.7},
+  morceaux: {captation: {2: 250, 4: 300, 6: 350, 8: 450}, montage: {2: 40, 4: 60, 6: 80, 8: 100}, mixage: 40, recalage: 15, titres: 30, degressif: 0.7},
   clip: {
     jour: {performance: 350, histoire: 450, melange: 400, nsp: 400},
     montage: {performance: 250, histoire: 400, melange: 350, nsp: 350},
@@ -430,6 +460,8 @@ const SONS_FOURNIS = {
   camera: {t: 'Seulement le son des caméras', s: 'Je fais au mieux avec ce qu’il y a'},
   nsp:    {t: 'Je ne sais pas'},
 };
+const PREFS = {email: {t: 'Email'}, appel: {t: 'Appel'}, sms: {t: 'SMS, WhatsApp'}};
+const SOURCES = {bouche: 'Bouche à oreille', video: 'Une de vos vidéos', reseaux: 'Réseaux sociaux', recherche: 'Recherche internet', client: 'Déjà client', autre: 'Autre'};
 const BUDGETS = {
   b500: {t: 'Moins de 500 €'}, b1000: {t: '500 à 1 000 €'}, b2000: {t: '1 000 à 2 000 €'},
   b5000: {t: '2 000 à 5 000 €'}, bplus: {t: 'Plus de 5 000 €'}, nsp: {t: 'Je préfère en parler'},
@@ -486,11 +518,11 @@ const pluriel = (n, un, plus) => `${n} ${n > 1 ? plus : un}`;
 const blank = () => ({
   type: null, nom: '', formule: null, clipStyle: null, desc: '',
   services: {tournage: true, montage: true, mixage: true},
-  dates: [{d: '', h: ''}], flou: false, nbApprox: 1, periode: '', lieu: '',
+  dates: [{d: '', h: ''}], flou: false, nbApprox: 1, periode: '', salle: '', ville: '', lieuGeo: null,
   memeSpectacle: null, formation: null, instruments: '',
   cameras: null, camerasFournies: null, duree: null, nbMorceaux: 1, dureeFinale: null,
   livrables: {}, son: null, budget: null, delai: null, delaiDate: '',
-  contact: {nom: '', email: '', tel: ''}, message: '', honey: '', envoye: false,
+  contact: {nom: '', email: '', tel: '', pref: 'email', source: null}, message: '', honey: '', envoye: false,
 });
 let S = blank();
 
@@ -528,7 +560,7 @@ function mixBase(s) {
 
 function setType(v) {
   if (S.type === v) return;
-  const garde = ['nom', 'contact', 'message', 'dates', 'flou', 'nbApprox', 'periode', 'lieu', 'delai', 'delaiDate', 'formation', 'instruments'];
+  const garde = ['nom', 'contact', 'message', 'dates', 'flou', 'nbApprox', 'periode', 'salle', 'ville', 'lieuGeo', 'delai', 'delaiDate', 'formation', 'instruments'];
   const n = blank();
   for (const k of garde) n[k] = S[k];
   n.type = v;
@@ -554,6 +586,7 @@ function estimer(s = S) {
   };
   const sv = s.services, lv = s.livrables || {}, n = nbDates(s), cams = camsEff(s);
   const camsTxt = CAMS[cams].t;
+  const mf = sv.tournage ? 1 : T.montageSeul;
   let mode = 'precis', marge = T.marge;
 
   if (s.type === 'spectacle') {
@@ -566,8 +599,8 @@ function estimer(s = S) {
     else if (post(s)) add('Préparation de vos fichiers', T.prep * mult);
     const complet = lv.entier || lv.morceaux;
     if (sv.montage) {
-      if (complet) add(`Montage ${lv.entier ? 'du spectacle entier' : 'des morceaux'}, étalonnage${x}`, T.montage[cams] * k * (1 + T.montageReprise * (reps - 1)) * mult);
-      if (lv.teaser) add(`Teaser d’une minute${x}`, (complet ? T.teaser : T.teaserSeul) * mult);
+      if (complet) add(`Montage ${lv.entier ? 'du spectacle entier' : 'des morceaux'}, étalonnage${x}`, T.montage[cams] * mf * k * (1 + T.montageReprise * (reps - 1)) * mult);
+      if (lv.teaser) add(`Teaser d’une minute${x}`, (complet ? T.teaser : T.teaserSeul * mf) * mult);
       if (lv.entier && lv.morceaux) add(`Morceaux exportés séparément${x}`, T.morceauxSepares * mult);
       if (lv.vertical) add(`Version verticale${x}`, T.verticale * mult);
       if (lv.titres) add(`Titres et générique${x}`, T.titres * mult);
@@ -584,7 +617,7 @@ function estimer(s = S) {
     if (sv.tournage) add(`Tournage · ${camsTxt}${n > 1 ? `, ${n} dates` : ''}`, T.captation[cams] * (1 + T.reprise * (n - 1)), undefined, false);
     else if (post(s)) add('Préparation de vos fichiers', T.prep);
     if (sv.montage) {
-      add('Montage du teaser, étalonnage', T.teaserSeul * (1 + T.montageReprise * (n - 1)));
+      add('Montage du teaser, étalonnage', T.teaserSeul * mf * (1 + T.montageReprise * (n - 1)));
       if (lv.court) add('Version de 15 à 30 secondes', T.versionCourte);
       if (lv.vertical) add('Version verticale', T.verticale);
     }
@@ -592,24 +625,24 @@ function estimer(s = S) {
   } else if (s.type === 'morceaux') {
     const N = s.nbMorceaux || 1;
     const deg = unit => { let t = 0; for (let i = 1; i <= N; i++) t += unit * (i <= 3 ? 1 : T.morceaux.degressif); return t; };
-    const quoi = pluriel(N, 'morceau', 'morceaux');
-    if (sv.tournage) add(`Tournage · ${camsTxt}${n > 1 ? `, ${n} sessions` : ''}`, T.captation[cams] * T.morceaux.captation * n, undefined, false);
+    const de = N > 1 ? `de ${N} morceaux` : 'd’un morceau';
+    if (sv.tournage) add(`Tournage · ${camsTxt}${n > 1 ? `, ${n} sessions` : ''}`, T.morceaux.captation[cams] * n, undefined, false);
     else if (post(s)) add('Préparation de vos fichiers', T.prep);
     if (sv.montage) {
-      add(`Montage de ${quoi}, étalonnage`, deg(T.morceaux.montage[cams]));
+      add(`Montage ${de}, étalonnage`, deg(T.morceaux.montage[cams] * mf));
       if (lv.titres) add('Titres à l’écran', T.morceaux.titres);
       if (lv.vertical) add('Versions verticales', T.verticale);
     }
     if (sv.mixage) {
       const u = s.son === 'mix' ? T.morceaux.recalage : s.son === 'camera' ? T.morceaux.mixage * T.sonCamera : T.morceaux.mixage;
-      add(`${s.son === 'mix' ? 'Calage du son' : 'Mixage'} de ${quoi}`, deg(u));
+      add(`${s.son === 'mix' ? 'Calage du son' : 'Mixage'} ${de}`, deg(u));
     }
   } else if (s.type === 'clip') {
     const st = s.clipStyle || 'nsp';
     if (sv.tournage) add(`Tournage · ${pluriel(n, 'jour', 'jours')}`, T.clip.jour[st] * n, undefined, false);
     else if (post(s)) add('Préparation de vos fichiers', T.prep);
     if (sv.montage) {
-      add('Montage et étalonnage du clip', T.clip.montage[st] * (1 + T.clip.jourSup * (n - 1)));
+      add('Montage et étalonnage du clip', T.clip.montage[st] * mf * (1 + T.clip.jourSup * (n - 1)));
       if (lv.vertical) add('Version verticale', T.verticale);
       if (lv.makingof) add('Making-of', T.clip.makingof);
     }
@@ -621,7 +654,7 @@ function estimer(s = S) {
     else if (post(s)) add('Préparation de vos fichiers', T.prep);
     if (sv.montage) {
       const [a, b] = T.docu.jours[df];
-      add(`Montage et étalonnage · ${a} à ${b} jours`, a * T.docu.montageJour, b * T.docu.montageJour);
+      add(`Montage et étalonnage · ${a} à ${b} jours`, a * T.docu.montageJour * mf, b * T.docu.montageJour * mf);
       if (lv.bandeAnnonce) add('Bande-annonce', T.docu.bandeAnnonce);
       if (lv.sousTitres) add('Sous-titres', T.docu.sousTitres);
       if (lv.vertical) add('Extraits verticaux', T.docu.verticale);
@@ -637,9 +670,29 @@ function estimer(s = S) {
     const pM = L.filter(l => l.post).reduce((a, l) => a + l.max, 0);
     add('Délai express (+20 % sur la post-production)', pm * T.urgence, pM * T.urgence, false);
   }
+  const dep = deplacement(s);
+  if (mode !== 'devis' && dep && dep.cout) add(`Déplacement · ${dep.km} km depuis ${CONFIG.depart.nom}${n > 1 ? `, ${n} trajets` : ''}`, dep.cout, undefined, false);
+  if (mode !== 'devis' && L.length) {
+    const tm = L.reduce((a, l) => a + l.min, 0), tM = L.reduce((a, l) => a + l.max, 0);
+    if (tM < T.minimum) add(`Minimum de commande (${fmt(T.minimum)})`, T.minimum - tm, T.minimum - tM, false);
+  }
   const min = L.reduce((a, l) => a + l.min, 0), max = L.reduce((a, l) => a + l.max, 0);
   if (!L.length && mode !== 'devis') mode = 'devis';
-  return {lignes: L, min, max, mode, marge};
+  return {lignes: L, min, max, mode, marge, dep};
+}
+function distanceKm(a, b) {
+  const rad = x => x * Math.PI / 180;
+  const dLat = rad(b.lat - a.lat), dLon = rad(b.lon - a.lon);
+  const q = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLon / 2) ** 2;
+  return 2 * 6371 * Math.asin(Math.sqrt(q));
+}
+/* Distance par la route estimée (vol d'oiseau × facteurRoute) et frais si une règle est fixée. */
+function deplacement(s = S) {
+  if (!s.services.tournage || !s.lieuGeo) return null;
+  const r = CONFIG.deplacement;
+  const km = Math.round(distanceKm(CONFIG.depart, s.lieuGeo) * r.facteurRoute);
+  const cout = r.euroParKm == null ? null : Math.max(0, km - (r.gratuitKm || 0)) * 2 * r.euroParKm * nbDates(s);
+  return {km, cout};
 }
 function fourchette(E) {
   if (E.mode === 'devis') return {big: 'Sur devis', sub: 'Votre projet sort des cases : je vous fais une proposition sur mesure.', court: 'sur devis'};
@@ -708,7 +761,7 @@ function rows() {
   if (has('desc')) add('Description', S.desc.trim(), 'desc');
   const sv = [S.services.tournage && 'tournage', S.services.montage && 'montage', S.services.mixage && 'mixage'].filter(Boolean).join(', ');
   add('Prestations', sv.charAt(0).toUpperCase() + sv.slice(1), has('services') ? 'services' : 'formule');
-  if (has('quand')) { add('Dates', datesTxt(), 'quand'); add('Lieu', S.lieu.trim(), 'quand'); }
+  if (has('quand')) { add('Dates', datesTxt(), 'quand'); add('Lieu', lieuTxt(), 'quand'); }
   if (has('meme')) add('Représentations', MEME[S.memeSpectacle]?.t, 'meme');
   if (has('formation')) add('Sur scène', [FORMATIONS[S.formation]?.t, S.instruments.trim()].filter(Boolean).join(' · '), 'formation');
   if (has('cameras')) add('Caméras', camerasTxt(), 'cameras');
@@ -727,6 +780,11 @@ function rows() {
   if (has('delai')) add('Délai', delaiTxt(), 'delai');
   return r;
 }
+function lieuTxt() {
+  const v = S.lieuGeo ? `${S.lieuGeo.nom} (${S.lieuGeo.cp})` : S.ville.trim();
+  const dep = deplacement();
+  return [S.salle.trim(), v].filter(Boolean).join(', ') + (dep ? `\n≈ ${dep.km} km de ${CONFIG.depart.nom} par la route` : '');
+}
 const sujet = () => `Demande de devis · ${TYPES[S.type]?.court || 'Vidéo'} · ${S.nom.trim() || S.contact.nom.trim()}`;
 function texte() {
   const E = estimer(), F = fourchette(E);
@@ -734,8 +792,12 @@ function texte() {
   for (const [k, v] of rows()) L.push(`${k} : ${v.replace(/\n/g, ', ')}`);
   L.push('', `Estimation : ${F.court}`);
   for (const l of E.lignes) L.push(`  - ${l.label} : ${prixLigne(l)}`);
-  L.push('', `Nom : ${S.contact.nom.trim()}`, `Email : ${S.contact.email.trim()}`);
-  if (S.contact.tel.trim()) L.push(`Téléphone : ${S.contact.tel.trim()}`);
+  const c = S.contact;
+  L.push('', `Nom : ${c.nom.trim()}`);
+  if (c.email.trim()) L.push(`Email : ${c.email.trim()}`);
+  if (c.tel.trim()) L.push(`Téléphone : ${c.tel.trim()}`);
+  L.push(`Répondre par : ${PREFS[c.pref].t}`);
+  if (c.source) L.push(`M’a connu par : ${SOURCES[c.source]}`);
   if (S.message.trim()) L.push('', 'Message :', S.message.trim());
   return L.join('\n');
 }
@@ -743,9 +805,13 @@ function payload() {
   const E = estimer(), F = fourchette(E);
   const p = {
     _subject: sujet(), _template: 'table', _captcha: 'false', _honey: S.honey,
-    'Nom': S.contact.nom.trim(), email: S.contact.email.trim(),
+    'Nom': S.contact.nom.trim(),
   };
-  if (S.contact.tel.trim()) p['Téléphone'] = S.contact.tel.trim();
+  const c = S.contact;
+  if (c.email.trim()) p.email = c.email.trim();
+  if (c.tel.trim()) p['Téléphone'] = c.tel.trim();
+  p['Répondre par'] = PREFS[c.pref].t;
+  if (c.source) p['Connu par'] = SOURCES[c.source];
   for (const [k, v] of rows()) p[k] = v.replace(/\n/g, ', ');
   p['Estimation'] = F.court;
   if (E.lignes.length) p['Détail de l’estimation'] = E.lignes.map(l => `${l.label} : ${prixLigne(l)}`).join(' ; ');
@@ -865,8 +931,12 @@ const STEPS = [
     hint: () => 'Je vous réponds avec un devis précis, sans engagement.',
     render: renderContact, button: () => 'Envoyer ma demande',
     validate: () => {
-      if (!S.contact.nom.trim()) return 'Indiquez votre nom.';
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(S.contact.email.trim())) return 'Cette adresse email ne semble pas complète.';
+      const c = S.contact, email = c.email.trim(), tel = c.tel.replace(/[^\d]/g, '');
+      if (!c.nom.trim()) return 'Indiquez votre nom.';
+      if (c.pref === 'email' && !email) return 'Indiquez votre email.';
+      if (c.pref !== 'email' && !c.tel.trim()) return 'Indiquez votre numéro de téléphone.';
+      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return 'Cette adresse email ne semble pas complète.';
+      if (c.tel.trim() && tel.length < 9) return 'Ce numéro de téléphone semble incomplet.';
       return null;
     }},
   {id: 'fin', meta: true, show: () => false, render: renderFin, noFoot: true},
@@ -919,6 +989,7 @@ function render(dir = 1) {
   $('#next').textContent = st.button ? st.button() : 'Continuer';
   $('#next').disabled = false;
   hideErr();
+  majLive();
   if (dir !== 0) {
     window.scrollTo(0, 0);
     const af = box.querySelector('[data-autofocus]') || box.querySelector('h1');
@@ -1025,12 +1096,70 @@ function renderQuand(box) {
   cb.addEventListener('change', () => {
     S.flou = cb.checked; datesBox.hidden = S.flou; flouBox.hidden = !S.flou; save(); hideErr();
   });
-  const lieu = h('input', {type: 'text', id: 'f-lieu', value: S.lieu, placeholder: 'Nom de la salle, ville', autocomplete: 'off', autocapitalize: 'words', enterkeyhint: 'done'});
-  lieu.addEventListener('input', () => { S.lieu = lieu.value; save(); });
-  lieu.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); lieu.blur(); } });
+  const salle = h('input', {type: 'text', id: 'f-salle', value: S.salle, placeholder: 'ex. salle des fêtes, église Saint-Paul', autocomplete: 'off', autocapitalize: 'sentences', enterkeyhint: 'done'});
+  salle.addEventListener('input', () => { S.salle = salle.value; save(); });
+  salle.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); salle.blur(); } });
 
   box.append(datesBox, h('label', {class: 'toggle'}, cb, 'Pas encore de date précise'), flouBox,
-    h('hr', {class: 'sep'}), champ('Lieu', true, lieu));
+    h('hr', {class: 'sep'}), champVille(), champ('Salle ou lieu précis', true, salle));
+}
+/* Ville avec les communes proposées par geo.api.gouv.fr, pour calculer la distance. */
+function champVille() {
+  const input = h('input', {
+    type: 'text', id: 'f-ville', value: S.ville, placeholder: 'Commune ou code postal',
+    autocomplete: 'off', autocapitalize: 'words', enterkeyhint: 'search',
+    role: 'combobox', 'aria-autocomplete': 'list', 'aria-expanded': 'false', 'aria-controls': 'f-ville-list',
+  });
+  const list = h('div', {class: 'sugg', id: 'f-ville-list', role: 'listbox', hidden: true});
+  const info = h('p', {class: 'small ville-info', 'aria-live': 'polite'});
+  let timer = null, seq = 0, items = [];
+  const majInfo = () => {
+    const dep = deplacement();
+    if (S.lieuGeo) info.textContent = `${S.lieuGeo.nom}, ${S.lieuGeo.cp}${S.lieuGeo.dep ? ' (' + S.lieuGeo.dep + ')' : ''}${dep ? ` · environ ${dep.km} km de ${CONFIG.depart.nom}` : ''}`;
+    else info.textContent = S.ville.trim() ? 'Choisissez la commune dans la liste pour que je calcule la distance. À l’étranger, laissez simplement le nom.' : '';
+  };
+  const fermer = () => { list.hidden = true; input.setAttribute('aria-expanded', 'false'); };
+  const choisir = it => {
+    S.lieuGeo = it; S.ville = it.nom; input.value = it.nom;
+    save(); fermer(); majInfo();
+  };
+  const chercher = async q => {
+    const my = ++seq;
+    const cp = /^\d{5}$/.test(q);
+    if (!cp && (q.length < 2 || /^\d+$/.test(q))) { items = []; fermer(); return; }
+    const url = 'https://geo.api.gouv.fr/communes?' + (cp ? 'codePostal=' + q : 'nom=' + encodeURIComponent(q) + '&boost=population')
+      + '&fields=nom,codesPostaux,centre,departement,population' + (cp ? '' : '&limit=6');
+    let res = [];
+    try {
+      const r = await fetch(url);
+      const data = await r.json();
+      if (cp) data.sort((a, b) => (b.population || 0) - (a.population || 0));
+      res = data.filter(c => c.centre).slice(0, 6).map(c => ({
+        nom: c.nom, cp: cp ? q : ((c.codesPostaux || [])[0] || ''), dep: c.departement ? c.departement.nom : '',
+        lat: c.centre.coordinates[1], lon: c.centre.coordinates[0],
+      }));
+    } catch (e) { res = []; }
+    if (my !== seq) return;
+    items = res;
+    list.replaceChildren(...items.map(it => h('button', {type: 'button', role: 'option', class: 'sugg-it', onclick: () => choisir(it)},
+      h('b', {}, it.nom), ` ${it.cp}${it.dep ? ' · ' + it.dep : ''}`)));
+    list.hidden = !items.length;
+    input.setAttribute('aria-expanded', String(!!items.length));
+  };
+  input.addEventListener('input', () => {
+    S.ville = input.value; S.lieuGeo = null; save(); majInfo();
+    clearTimeout(timer);
+    timer = setTimeout(() => chercher(input.value.trim()), 250);
+  });
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); if (items.length && !list.hidden) choisir(items[0]); else input.blur(); }
+    if (e.key === 'Escape') fermer();
+  });
+  input.addEventListener('blur', () => setTimeout(fermer, 250));
+  majInfo();
+  return h('div', {class: 'field'},
+    h('label', {for: 'f-ville'}, 'Ville', h('span', {class: 'opt-l'}, ' (facultatif)')),
+    input, list, info);
 }
 function renderInstruments() {
   const t = h('textarea', {id: 'f-instr', rows: '3', placeholder: 'ex. piano, voix et contrebasse, du jazz'}, S.instruments);
@@ -1058,7 +1187,12 @@ function renderEstimation(box) {
 
   const notes = [];
   if (E.mode !== 'devis') notes.push('Prix TTC, à titre indicatif : le devis précis dépend des détails que nous verrons ensemble.');
-  notes.push(CONFIG.noteDeplacement);
+  if (S.services.tournage) {
+    const dep = E.dep;
+    if (!dep) notes.push(CONFIG.noteDeplacement);
+    else if (dep.cout === 0) notes.push(`Déplacement compris : environ ${dep.km} km depuis ${CONFIG.depart.nom}.`);
+    else if (dep.cout == null) notes.push(`Déplacement : environ ${dep.km} km depuis ${CONFIG.depart.nom} par la route, frais précisés dans le devis.`);
+  }
   if (S.services.montage) notes.push('Toujours compris : étalonnage, export en haute définition, livraison par lien de téléchargement.');
   if (S.services.tournage && !S.services.montage) notes.push('Sans montage, vous recevez les fichiers bruts de chaque caméra.');
   if (S.type === 'clip') notes.push('Pour un clip, le prix dépend surtout du scénario : lieux, décors, comédiens, nombre de plans.');
@@ -1075,29 +1209,46 @@ function renderEstimation(box) {
 }
 
 function renderContact(box) {
+  const c = S.contact;
   const inp = (id, type, key, attrs) => {
-    const el = h('input', {id, type, value: S.contact[key], ...attrs});
-    el.addEventListener('input', () => { S.contact[key] = el.value; save(); hideErr(); });
+    const el = h('input', {id, type, value: c[key], ...attrs});
+    el.addEventListener('input', () => { c[key] = el.value; save(); hideErr(); });
     el.addEventListener('keydown', e => {
       if (e.key !== 'Enter') return;
       e.preventDefault();
       const all = [...box.querySelectorAll('input:not(.hp), textarea')];
       const n = all[all.indexOf(el) + 1];
-      if (n) n.focus();
+      if (n) n.focus(); else el.blur();
     });
     return el;
   };
+  const seg = h('div', {class: 'seg', role: 'radiogroup', 'aria-labelledby': 'lbl-pref'},
+    Object.entries(PREFS).map(([v, o]) => h('button', {
+      type: 'button', role: 'radio', 'aria-checked': String(c.pref === v),
+      onclick: () => { if (c.pref !== v) { c.pref = v; save(); hideErr(); render(0); } },
+    }, o.t)));
+  const email = champ('Email', c.pref !== 'email', inp('c-email', 'email', 'email', {autocomplete: 'email', inputmode: 'email', autocapitalize: 'off', spellcheck: 'false', enterkeyhint: 'next'}));
+  const tel = champ('Téléphone', c.pref === 'email', inp('c-tel', 'tel', 'tel', {autocomplete: 'tel', inputmode: 'tel', enterkeyhint: 'next'}));
+  const sources = h('div', {class: 'chips', role: 'group', 'aria-labelledby': 'lbl-source'});
+  for (const [v, txt] of Object.entries(SOURCES)) {
+    sources.append(h('button', {type: 'button', class: 'chip', 'data-v': v, 'aria-pressed': String(c.source === v), onclick: () => {
+      c.source = c.source === v ? null : v; save();
+      for (const b of sources.children) b.setAttribute('aria-pressed', String(b.dataset.v === c.source));
+    }}, txt));
+  }
   const msg = h('textarea', {id: 'c-msg', rows: '4', placeholder: 'Lien vers votre musique, accès au lieu, idées, questions…'}, S.message);
   msg.addEventListener('input', () => { S.message = msg.value; save(); });
   const hp = h('input', {type: 'text', class: 'hp', name: '_honey', tabindex: '-1', autocomplete: 'off', 'aria-hidden': 'true'});
   hp.addEventListener('input', () => { S.honey = hp.value; });
   box.append(
     champ('Votre nom', false, inp('c-nom', 'text', 'nom', {autocomplete: 'name', autocapitalize: 'words', enterkeyhint: 'next', 'data-autofocus': true})),
-    champ('Email', false, inp('c-email', 'email', 'email', {autocomplete: 'email', inputmode: 'email', autocapitalize: 'off', spellcheck: 'false', enterkeyhint: 'next'})),
-    champ('Téléphone', true, inp('c-tel', 'tel', 'tel', {autocomplete: 'tel', inputmode: 'tel', enterkeyhint: 'next'})),
+    h('div', {class: 'field'}, h('span', {class: 'lbl-row', id: 'lbl-pref'}, 'Le plus simple pour vous répondre'), seg),
+    ...(c.pref === 'email' ? [email, tel] : [tel, email]),
+    h('div', {class: 'field'}, h('span', {class: 'lbl-row', id: 'lbl-source'}, 'Comment m’avez-vous connu ?', h('span', {class: 'opt-l'}, ' (facultatif)')), sources),
     champ('Un mot à ajouter', true, msg),
     hp,
-    h('p', {class: 'small'}, 'Vos coordonnées servent uniquement à répondre à votre demande.'));
+    h('p', {class: 'small'}, 'Vos coordonnées servent uniquement à répondre à votre demande. ',
+      h('a', {href: CONFIG.confidentialite, target: '_blank', rel: 'noopener'}, 'Politique de confidentialité')));
 }
 
 function renderWelcome(box) {
@@ -1146,11 +1297,12 @@ function boutonCopie(label = 'Copier ma demande') {
 }
 function renderFin(box) {
   const F = fourchette(estimer());
-  const prenom = S.contact.nom.trim().split(/\s+/)[0];
+  const c = S.contact, prenom = c.nom.trim().split(/\s+/)[0];
+  const par = c.pref === 'email' ? `à ${c.email.trim()}` : c.pref === 'appel' ? `par téléphone au ${c.tel.trim()}` : `par message au ${c.tel.trim()}`;
   box.append(
     h('div', {class: 'done-ico', html: svg(ICONS.clap, 1.7)}),
     h('h1', {class: 'q', tabindex: '-1'}, 'C’est dans la boîte !'),
-    h('p', {class: 'lead'}, `Merci ${prenom}, votre demande est bien partie. Je vous réponds dès que possible à ${S.contact.email.trim()}.`),
+    h('p', {class: 'lead'}, `Merci ${prenom}, votre demande est bien partie. Je vous réponds dès que possible ${par}.`),
     F.court !== 'sur devis' && h('p', {class: 'hint'}, `Pour mémoire, l’estimation : ${F.court}.`),
     h('div', {class: 'actions'},
       boutonCopie('Copier le récapitulatif'),
@@ -1258,7 +1410,22 @@ async function envoyer(btn) {
    Sauvegarde du brouillon (sur ce téléphone seulement)
    ===================================================================== */
 const KEY = 'tm-devis-1';
+/* Bandeau « Estimation en cours » au-dessus du bouton, dès que les prestations sont connues. */
+function majLive() {
+  const el = $('#live');
+  const st = STEPS[cur];
+  const montrer = !st.meta && S.type && S.type !== 'autre' && idx(st.id) > idx('services') && st.id !== 'estimation' && st.id !== 'contact';
+  const E = montrer ? estimer() : null;
+  if (!E || E.mode === 'devis') { el.hidden = true; el.dataset.v = ''; return; }
+  const txt = fourchette(E).big;
+  el.hidden = false;
+  if (el.dataset.v === txt) return;
+  el.replaceChildren('Estimation en cours : ', h('b', {}, txt));
+  if (el.dataset.v) { el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); }
+  el.dataset.v = txt;
+}
 function save() {
+  majLive();
   if (S.envoye) return;
   try { localStorage.setItem(KEY, JSON.stringify({S, cur, t: Date.now()})); } catch (e) { /* navigation privée */ }
 }
